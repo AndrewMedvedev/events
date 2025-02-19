@@ -6,4 +6,4 @@ class EventModel(BaseModel):
     date: str
     time: str
     location: str
-    limit_people: int
+    limit_people: int | None
