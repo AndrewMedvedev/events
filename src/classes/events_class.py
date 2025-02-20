@@ -20,7 +20,7 @@ class Events:
                 limit_people=self.model.limit_people,
             )
             await CRUD().create_event(model=data)
-            return JSONResponse(status_code=status.HTTP_200_OK,content="ok",)
+            return JSONResponse(content=status.HTTP_200_OK)
         except Exception as e:
             return JSONResponse(content=e)
 
@@ -30,19 +30,26 @@ class Events:
         except Exception as e:
             return JSONResponse(content=e)
 
-    async def update_event(self, model_id: int, values: EventModelUpdate) -> JSONResponse:
+    async def update_event(
+        self,
+        model_id: int,
+        values: EventModelUpdate,
+    ) -> JSONResponse:
         try:
             await CRUD().update_event(
                 model_id=model_id,
                 values=values,
             )
-            return JSONResponse(status_code=status.HTTP_200_OK,content="ok",)
+            return JSONResponse(content=status.HTTP_200_OK)
         except Exception as e:
             return JSONResponse(content=e)
 
-    async def delete_event(self, model_id: int) -> JSONResponse:
+    async def delete_event(
+        self,
+        model_id: int,
+    ) -> JSONResponse:
         try:
             await CRUD().delete_event(model_id=model_id)
-            return JSONResponse(status_code=status.HTTP_200_OK,content="ok",)
+            return JSONResponse(content=status.HTTP_200_OK)
         except Exception as e:
             return JSONResponse(content=e)
