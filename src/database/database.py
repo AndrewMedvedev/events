@@ -11,7 +11,6 @@ engine = create_async_engine(DATABASE_URL)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
 int_pk = Annotated[int, mapped_column(primary_key=True)]
-int_null_true = Annotated[int, mapped_column(nullable=True)]
 str_uniq = Annotated[str, mapped_column(unique=True, nullable=False)]
 str_nullable = Annotated[str, mapped_column(nullable=False)]
 str_null_true = Annotated[str, mapped_column(nullable=True)]

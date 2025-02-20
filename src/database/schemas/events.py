@@ -6,4 +6,11 @@ class EventModel(BaseModel):
     date: str
     time: str
     location: str
-    limit_people: int | None
+    limit_people: str | None
+
+
+class EventModelUpdate(BaseModel):
+    date: str | None
+    time: str | None
+    location: str | None
+    limit_people: str | None
