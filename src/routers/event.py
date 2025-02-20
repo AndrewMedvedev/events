@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
+
 from src.classes import Events
 from src.database.schemas import EventModel, EventModelUpdate
 

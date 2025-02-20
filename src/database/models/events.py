@@ -1,12 +1,7 @@
 from sqlalchemy.orm import Mapped
 
-from src.database.database import (
-    Base,
-    int_pk,
-    str_uniq,
-    str_nullable,
-    str_null_true,
-)
+from src.database.database import (Base, int_pk, str_null_true, str_nullable,
+                                   str_uniq)
 
 
 class Event(Base):

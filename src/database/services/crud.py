@@ -1,8 +1,9 @@
-from fastapi.responses import JSONResponse
 from fastapi import status
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
+
 from src.database.models import Event
 from src.database.services.orm import DatabaseSessionService
 

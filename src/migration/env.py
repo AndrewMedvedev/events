@@ -3,10 +3,6 @@ import sys
 from logging.config import fileConfig
 from os.path import abspath, dirname
 
-from sqlalchemy import pool
-from sqlalchemy.engine import Connection
-from sqlalchemy.ext.asyncio import async_engine_from_config
-
 from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection

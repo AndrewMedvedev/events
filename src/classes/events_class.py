@@ -1,7 +1,8 @@
-from fastapi.responses import JSONResponse
 from fastapi import status
-from src.database.schemas import EventModel, EventModelUpdate
+from fastapi.responses import JSONResponse
+
 from src.database.models import Event
+from src.database.schemas import EventModel, EventModelUpdate
 from src.database.services import CRUD
 
 

@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from src.routers import router_event
 
 app = FastAPI(title="Админ панель личного аккаунта")
