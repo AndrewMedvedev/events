@@ -3,4 +3,4 @@ __all__ = (
     "EventModelUpdate",
 )
 
-from src.database.schemas.events import EventModel, EventModelUpdate
+from src.database.schemas.events_schemas import EventModel, EventModelUpdate

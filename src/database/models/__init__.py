@@ -2,4 +2,4 @@ __all__ = (
     "Event"
 )
 
-from src.database.models.events import Event
+from src.database.models.events_models import Event

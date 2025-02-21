@@ -4,10 +4,10 @@ from fastapi.responses import JSONResponse
 from src.classes import Events
 from src.database.schemas import EventModel, EventModelUpdate
 
-router_event = APIRouter(prefix="/event", tags=["event"])
+router_event = APIRouter(prefix="/events/v1", tags=["events"])
 
 
-@router_event.post("/v1/add/")
+@router_event.post("/add/")
 async def add(model: EventModel) -> JSONResponse:
     try:
         return await Events(model=model).add_event()
@@ -15,7 +15,7 @@ async def add(model: EventModel) -> JSONResponse:
         return JSONResponse(content=e)
 
 
-@router_event.get("/v1/get/")
+@router_event.get("/get/")
 async def get() -> JSONResponse:
     try:
         return await Events().get_events()
@@ -23,7 +23,7 @@ async def get() -> JSONResponse:
         return JSONResponse(content=e)
 
 
-@router_event.put("/v1/update/{model_id}")
+@router_event.put("/update/{model_id}")
 async def update(model: EventModelUpdate, model_id: int) -> JSONResponse:
     try:
         return await Events().update_event(
@@ -34,7 +34,7 @@ async def update(model: EventModelUpdate, model_id: int) -> JSONResponse:
         return JSONResponse(content=e)
 
 
-@router_event.delete("/v1/delete/{model_id}")
+@router_event.delete("/delete/{model_id}")
 async def delete(
     model_id: int,
 ) -> JSONResponse:
