@@ -1,5 +1,6 @@
 __all__ = (
-    "Event"
+    "Event",
+    "Visitor",
 )
 
-from src.database.models.events_models import Event
+from src.database.models.relationship_models import Event, Visitor

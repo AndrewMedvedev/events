@@ -1,10 +1,8 @@
-from fastapi import status
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 
-from src.database.models import Event
+from src.database.models import Event, Visitor
 from src.database.services.orm import DatabaseSessionService
 
 
@@ -62,6 +60,55 @@ class CRUD(DatabaseSessionService):
             try:
                 if obj:
                     await session.delete(obj)
+                    await session.commit()
+                    return {"message": 200}
+            except Exception as e:
+                print(e)
+                return e
+
+    async def create_visitor(
+        self,
+        model: Visitor,
+    ) -> dict:
+        async with self.session() as session:
+            session.add(model)
+            await session.commit()
+            await session.refresh(model)
+        return {"message": 200}
+
+    # async def get_visitors_events(
+    #     self,
+    #     user_id: int,
+    # ) -> dict | str:
+    #     async with self.session() as session:
+    #         data = await session.execute(
+    #             select(Visitor).where(Visitor.user_id == user_id)
+    #         )
+    #         obj = data.scalar()
+    #         events = await session.execute(
+    #             select(Event).where(Event.id == obj.event_id)
+    #         )
+    #         try:
+    #             return events.scalars().all()
+    #         except Exception as _ex:
+    #             print(_ex)
+    #             return _ex
+
+    async def delete_visitor(
+        self,
+        user_id: int,
+        event_id: int,
+    ) -> dict | str:
+        async with self.session() as session:
+            # obj = await session.get(Visitor, user_id)
+            obj = await session.execute(
+                select(Visitor).where(
+                    Visitor.user_id == user_id and Visitor.event_id == event_id
+                )
+            )
+            try:
+                if obj:
+                    await session.delete(obj.scalar())
                     await session.commit()
                     return {"message": 200}
             except Exception as e:

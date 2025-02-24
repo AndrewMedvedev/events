@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
 
 from src.database.database import DATABASE_URL, Base
-from database.models.events_models import Event
+from database.models.relationship_models import Event, Visitor
 
 config = context.config
 config.set_main_option("sqlalchemy.url", DATABASE_URL)

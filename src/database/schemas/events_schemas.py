@@ -14,3 +14,5 @@ class EventModelUpdate(BaseModel):
     time: str | None
     location: str | None
     limit_people: str | None
+
+
