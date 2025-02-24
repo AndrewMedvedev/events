@@ -1,7 +1,8 @@
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, relationship, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.database.database import Base, int_pk, int_nullable, str_null_true, str_nullable, str_uniq
+from src.database.database import (Base, int_nullable, int_pk, str_null_true,
+                                   str_nullable, str_uniq)
 
 
 class Event(Base):

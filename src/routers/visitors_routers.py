@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request, Response, status
 from fastapi.responses import JSONResponse
+
 from src.classes import Visitors
 
 router_visitors = APIRouter(prefix="/visitors/v1", tags=["visitors"])

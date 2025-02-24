@@ -1,10 +1,11 @@
 from fastapi import Response, status
 from fastapi.responses import JSONResponse
+
 from src.classes.valid_tokens import ValidTokens
-from src.database import get_data
 from src.config import Settings
-from src.database.services.crud import CRUD
+from src.database import get_data
 from src.database.models import Visitor
+from src.database.services.crud import CRUD
 
 
 class Visitors:
