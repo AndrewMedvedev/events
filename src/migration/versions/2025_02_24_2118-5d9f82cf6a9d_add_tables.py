@@ -1,17 +1,18 @@
 """add tables
 
-Revision ID: e4b75f66ad30
+Revision ID: 5d9f82cf6a9d
 Revises: 
-Create Date: 2025-02-24 12:44:47.332410
+Create Date: 2025-02-24 21:18:03.820591
 
 """
 from typing import Sequence, Union
 
-import sqlalchemy as sa
 from alembic import op
+import sqlalchemy as sa
+
 
 # revision identifiers, used by Alembic.
-revision: str = 'e4b75f66ad30'
+revision: str = '5d9f82cf6a9d'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -25,6 +26,7 @@ def upgrade() -> None:
     sa.Column('date', sa.String(), nullable=False),
     sa.Column('time', sa.String(), nullable=False),
     sa.Column('location', sa.String(), nullable=False),
+    sa.Column('description', sa.String(), nullable=False),
     sa.Column('limit_people', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name_event'),
@@ -32,14 +34,13 @@ def upgrade() -> None:
     )
     op.create_table('visitors',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('event_id', sa.Integer(), nullable=False),
     sa.Column('first_name', sa.String(), nullable=False),
     sa.Column('last_name', sa.String(), nullable=False),
     sa.Column('email', sa.String(), nullable=False),
     sa.ForeignKeyConstraint(['event_id'], ['events.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email'),
-    sa.UniqueConstraint('email')
+    sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
 

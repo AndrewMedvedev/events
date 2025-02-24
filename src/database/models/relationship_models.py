@@ -1,20 +1,26 @@
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.database.database import (Base, int_nullable, int_pk, str_null_true,
-                                   str_nullable, str_uniq)
+from src.database.database import (
+    Base,
+    int_nullable,
+    int_pk,
+    str_null_true,
+    str_nullable,
+    str_uniq,
+)
 
 
 class Event(Base):
 
-    __table_args__ = {'extend_existing': True}
-
+    __table_args__ = {"extend_existing": True}
 
     id: Mapped[int_pk]
     name_event: Mapped[str_uniq]
     date: Mapped[str_nullable]
     time: Mapped[str_nullable]
     location: Mapped[str_nullable]
+    description: Mapped[str_nullable]
     limit_people: Mapped[str_null_true]
     visitors: Mapped[list["Visitor"]] = relationship(
         "Visitor",
@@ -35,9 +41,8 @@ class Event(Base):
 
 class Visitor(Base):
 
-    __table_args__ = {'extend_existing': True}
+    __table_args__ = {"extend_existing": True}
 
-    
     id: Mapped[int_pk]
     user_id: Mapped[int_nullable]
     event_id: Mapped[int] = mapped_column(ForeignKey("events.id"))
