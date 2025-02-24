@@ -6,7 +6,7 @@ from src.classes import Visitors
 router_visitors = APIRouter(prefix="/visitors/v1", tags=["visitors"])
 
 
-@router_visitors.post("/add")
+@router_visitors.post("/add/{event_id}")
 async def add(event_id: int, request: Request, response: Response) -> JSONResponse:
     try:
         access = request.cookies.get("access")
@@ -41,7 +41,7 @@ async def add(event_id: int, request: Request, response: Response) -> JSONRespon
 #         )
 
 
-@router_visitors.delete("/delete")
+@router_visitors.delete("/delete/{event_id}")
 async def delete(event_id: int, request: Request, response: Response) -> JSONResponse:
     try:
         access = request.cookies.get("access")

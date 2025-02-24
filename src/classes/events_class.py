@@ -17,6 +17,7 @@ class Events:
                 date=self.model.date,
                 time=self.model.time,
                 location=self.model.location,
+                description=self.model.description,
                 limit_people=self.model.limit_people,
             )
             await CRUD().create_event(model=data)
