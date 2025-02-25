@@ -30,7 +30,6 @@ class Visitors:
         ).valid()
         params = {
             "user_id": check_tokens.get("user_id"),
-            "password": Settings.PASSWORD_GET_DATA,
         }
         data = await get_data(params=params)
         user_model = Visitor(

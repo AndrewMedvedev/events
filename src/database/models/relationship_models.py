@@ -5,6 +5,7 @@ from src.database.database import (
     Base,
     int_nullable,
     int_pk,
+    datetime,
     str_null_true,
     str_nullable,
     str_uniq,
@@ -17,7 +18,7 @@ class Event(Base):
 
     id: Mapped[int_pk]
     name_event: Mapped[str_uniq]
-    date: Mapped[str_nullable]
+    date: Mapped[datetime]
     time: Mapped[str_nullable]
     location: Mapped[str_nullable]
     description: Mapped[str_nullable]

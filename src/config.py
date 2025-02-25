@@ -13,8 +13,6 @@ class Settings:
     DB_USER: str = config["DB_USER"]
     DB_PASSWORD: str = config["DB_PASSWORD"]
 
-    PASSWORD_GET_DATA: str = config["PASSWORD_GET_DATA"]
-
     GET_DATA: str = config["GET_DATA"]
 
     VALIDATE_ACCESS: str = config["VALIDATE_ACCESS"]
