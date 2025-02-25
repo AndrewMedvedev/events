@@ -34,17 +34,21 @@ class CRUD(DatabaseSessionService):
             return _ex
 
     async def update_event(self, event_id: int, values: BaseModel) -> dict:
-        event = Event(
-            id=event_id,
-            date_time=values.date_time,
-            location=values.location,
-            description=values.description,
-            limit_people=values.limit_people,
-        )
-        async with self.session() as session:
-            await session.merge(event)
-            await session.commit()
-            return {"message": 200}
+        try:
+            event = Event(
+                id=event_id,
+                date_time=values.date_time,
+                location=values.location,
+                description=values.description,
+                limit_people=values.limit_people,
+            )
+            async with self.session() as session:
+                await session.merge(event)
+                await session.commit()
+                return {"message": 200}
+        except Exception as _ex:
+            print(_ex)
+            return _ex
 
     async def delete_event(
         self,

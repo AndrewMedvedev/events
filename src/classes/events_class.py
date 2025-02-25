@@ -12,7 +12,6 @@ class Events:
 
     async def add_event(self) -> JSONResponse:
         try:
-            # print(type(self.model.date_time))
             data = Event(
                 name_event=self.model.name_event,
                 date_time=self.model.date_time,
@@ -31,19 +30,19 @@ class Events:
         except Exception as e:
             return JSONResponse(content=e)
 
-    async def update_event(
-        self,
-        model_id: int,
-        values: EventModelUpdate,
-    ) -> JSONResponse:
-        try:
-            await CRUD().update_event(
-                model_id=model_id,
-                values=values,
-            )
-            return JSONResponse(content=status.HTTP_200_OK)
-        except Exception as e:
-            return JSONResponse(content=e)
+    # async def update_event(
+    #     self,
+    #     model_id: int,
+    #     values: EventModelUpdate,
+    # ) -> JSONResponse:
+    #     try:
+    #         await CRUD().update_event(
+    #             model_id=model_id,
+    #             values=values,
+    #         )
+    #         return JSONResponse(content=status.HTTP_200_OK)
+    #     except Exception as e:
+    #         return JSONResponse(content=e)
 
     async def delete_event(
         self,

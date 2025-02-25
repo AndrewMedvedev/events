@@ -24,15 +24,15 @@ async def get() -> JSONResponse:
         return JSONResponse(content=str(Exception), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-@router_event.put("/update/{model_id}")
-async def update(model: EventModelUpdate, model_id: int) -> JSONResponse:
-    try:
-        return await Events().update_event(
-            model_id=model_id,
-            values=model,
-        )
-    except Exception:
-        return JSONResponse(content=str(Exception), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+# @router_event.put("/update/{model_id}")
+# async def update(model: EventModelUpdate, model_id: int) -> JSONResponse:
+#     try:
+#         return await Events().update_event(
+#             model_id=model_id,
+#             values=model,
+#         )
+#     except Exception:
+#         return JSONResponse(content=str(Exception), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @router_event.delete("/delete/{model_id}")
