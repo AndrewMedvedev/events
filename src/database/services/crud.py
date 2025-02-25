@@ -33,26 +33,18 @@ class CRUD(DatabaseSessionService):
             print(_ex)
             return _ex
 
-    async def update_event(
-        self,
-        model_id: int,
-        values: BaseModel,
-    ) -> dict | str:
+    async def update_event(self, event_id: int, values: BaseModel) -> dict:
+        event = Event(
+            id=event_id,
+            date_time=values.date_time,
+            location=values.location,
+            description=values.description,
+            limit_people=values.limit_people,
+        )
         async with self.session() as session:
-            values_dict = values.model_dump(exclude_unset=True)
-            try:
-                stmt = await session.execute(select(Event).where(Event.id == model_id))
-                stmt = stmt.scalar()
-                for key, value in values_dict.items():
-                    if value != "string":
-                        setattr(stmt, key, value)
-                    else:
-                        continue
-                await session.commit()
-                return {"message": 200}
-            except SQLAlchemyError as e:
-                print(e)
-                return e
+            await session.merge(event)
+            await session.commit()
+            return {"message": 200}
 
     async def delete_event(
         self,

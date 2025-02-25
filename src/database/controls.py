@@ -3,11 +3,10 @@ import aiohttp
 from src.config import Settings
 
 
-async def get_data(params: dict) -> dict:
+async def get_data(id: int) -> dict:
     async with aiohttp.ClientSession() as session:
         async with session.get(
-            Settings.GET_DATA,
-            params=params,
+            url=f"{Settings.GET_DATA}{id}",
             ssl=False,
         ) as data:
             user_data = await data.json()

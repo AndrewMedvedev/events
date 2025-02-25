@@ -2,7 +2,6 @@ from fastapi import Response, status
 from fastapi.responses import JSONResponse
 
 from src.classes.valid_tokens import ValidTokens
-from src.config import Settings
 from src.database import get_data
 from src.database.models import Visitor
 from src.database.services.crud import CRUD
@@ -28,10 +27,7 @@ class Visitors:
             token_refresh=self.token_refresh,
             response=self.response,
         ).valid()
-        params = {
-            "user_id": check_tokens.get("user_id"),
-        }
-        data = await get_data(params=params)
+        data = await get_data(check_tokens.get("user_id"))
         user_model = Visitor(
             user_id=check_tokens.get("user_id"),
             first_name=data.get("first_name"),
