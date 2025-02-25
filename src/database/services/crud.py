@@ -16,10 +16,13 @@ class CRUD(DatabaseSessionService):
         model: Event,
     ) -> dict:
         async with self.session() as session:
-            session.add(model)
-            await session.commit()
-            await session.refresh(model)
-        return {"message": 200}
+            try:
+                session.add(model)
+                await session.commit()
+                await session.refresh(model)
+                return {"message": 200}
+            except Exception as e:
+                print(e)
 
     async def read_event(self) -> list[dict]:
         async with self.session() as session:

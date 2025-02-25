@@ -12,10 +12,10 @@ class Events:
 
     async def add_event(self) -> JSONResponse:
         try:
+            # print(type(self.model.date_time))
             data = Event(
                 name_event=self.model.name_event,
-                date=self.model.date,
-                time=self.model.time,
+                date_time=self.model.date_time,
                 location=self.model.location,
                 description=self.model.description,
                 limit_people=self.model.limit_people,

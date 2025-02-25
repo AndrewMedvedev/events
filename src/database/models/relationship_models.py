@@ -1,12 +1,12 @@
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, DateTime
+from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database.database import (
     Base,
     int_nullable,
+    int_null_true,
     int_pk,
-    datetime,
-    str_null_true,
     str_nullable,
     str_uniq,
 )
@@ -18,11 +18,10 @@ class Event(Base):
 
     id: Mapped[int_pk]
     name_event: Mapped[str_uniq]
-    date: Mapped[datetime]
-    time: Mapped[str_nullable]
+    date_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     location: Mapped[str_nullable]
     description: Mapped[str_nullable]
-    limit_people: Mapped[str_null_true]
+    limit_people: Mapped[int_null_true]
     visitors: Mapped[list["Visitor"]] = relationship(
         "Visitor",
         back_populates="event",
