@@ -7,6 +7,7 @@ class EventModel(BaseModel):
     date_time: datetime
     location: str
     description: str
+    points_for_the_event: int | None
     limit_people: int | None
 
 

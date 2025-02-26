@@ -40,27 +40,28 @@ class Visitors:
             self.response.set_cookie(
                 key="access",
                 value=check_tokens.get("access"),
-                samesite="none",
-                httponly=True,
+                samesite=None,
+                httponly=False,
                 secure=True,
             )
         return JSONResponse(content=status.HTTP_200_OK)
 
-    # async def get_user_events(self):
-    #     check_tokens = await ValidTokens(
-    #         token_access=self.token_access,
-    #         token_refresh=self.token_refresh,
-    #         response=self.response,
-    #     ).valid()
-    #     if "access" in check_tokens:
-    #         self.response.set_cookie(
-    #             key="access",
-    #             value=check_tokens.get("access"),
-    #             samesite="none",
-    #             httponly=True,
-    #             secure=True,
-    #         )
-    #     return await CRUD().get_visitors_events(user_id=check_tokens.get("user_id"))
+    async def get_user_events(self) -> list[dict]:
+        check_tokens = await ValidTokens(
+            token_access=self.token_access,
+            token_refresh=self.token_refresh,
+            response=self.response,
+        ).valid()
+        events = await CRUD().get_visitors_events(user_id=check_tokens.get("user_id"))
+        if "access" in check_tokens:
+            self.response.set_cookie(
+                key="access",
+                value=check_tokens.get("access"),
+                samesite=None,
+                httponly=False,
+                secure=True,
+            )
+        return [{"event_id": i.event_id} for i in events]
 
     async def delete_user(self) -> JSONResponse:
         check_tokens = await ValidTokens(
@@ -75,8 +76,8 @@ class Visitors:
             self.response.set_cookie(
                 key="access",
                 value=check_tokens.get("access"),
-                samesite="none",
-                httponly=True,
+                samesite=None,
+                httponly=False,
                 secure=True,
             )
         return JSONResponse(content=status.HTTP_200_OK)

@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 from src.classes import Events
 from src.database.schemas import EventModel, EventModelUpdate
 
-router_event = APIRouter(prefix="/events/v1", tags=["events"])
+router_event = APIRouter(prefix="/api/v1/events", tags=["events"])
 
 
 @router_event.post("/add/")
@@ -35,11 +35,11 @@ async def get() -> JSONResponse:
 #         return JSONResponse(content=str(Exception), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-@router_event.delete("/delete/{model_id}")
+@router_event.delete("/delete/{event_id}")
 async def delete(
-    model_id: int,
+    event_id: int,
 ) -> JSONResponse:
     try:
-        return await Events().delete_event(model_id=model_id)
+        return await Events().delete_event(model_id=event_id)
     except Exception:
         return JSONResponse(content=str(Exception), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)

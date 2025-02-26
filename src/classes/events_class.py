@@ -18,13 +18,14 @@ class Events:
                 location=self.model.location,
                 description=self.model.description,
                 limit_people=self.model.limit_people,
+                points_for_the_event=self.model.points_for_the_event,
             )
             await CRUD().create_event(model=data)
             return JSONResponse(content=status.HTTP_200_OK)
         except Exception as e:
             return JSONResponse(content=e)
 
-    async def get_events(self):
+    async def get_events(self) -> dict:
         try:
             return await CRUD().read_event()
         except Exception as e:

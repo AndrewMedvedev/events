@@ -22,6 +22,7 @@ class Event(Base):
     location: Mapped[str_nullable]
     description: Mapped[str_nullable]
     limit_people: Mapped[int_null_true]
+    points_for_the_event: Mapped[int_null_true]
     visitors: Mapped[list["Visitor"]] = relationship(
         "Visitor",
         back_populates="event",

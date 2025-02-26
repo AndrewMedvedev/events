@@ -18,23 +18,24 @@ class ValidTokens:
         self.token_refresh = token_refresh
         self.response = response
 
-    async def valid(self) -> str | bool:
+    async def valid(self) -> dict | str:
         send_access = await self.send_access_token(self.token_access)
         send_refresh = await self.send_refresh_token(self.token_refresh)
-        match send_access:
-            case dict():
-                return send_access
-            case _:
-                if isinstance(send_refresh, dict):
-                    self.response.delete_cookie(
-                        key="access",
-                        samesite="none",
-                        httponly=True,
-                        secure=True,
-                    )
-                    return send_refresh
-                else:
-                    return False
+        try:
+            match send_access:
+                case dict():
+                    return send_access
+                case _:
+                    if isinstance(send_refresh, dict):
+                        self.response.delete_cookie(
+                            key="access",
+                            samesite=None,
+                            httponly=False,
+                            secure=True,
+                        )
+                        return send_refresh
+        except Exception as e:
+            return e
 
     @staticmethod
     async def send_refresh_token(
