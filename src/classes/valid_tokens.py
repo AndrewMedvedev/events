@@ -39,10 +39,10 @@ class ValidTokens:
     @staticmethod
     async def send_refresh_token(
         token_refresh: str,
-    ) -> str:
+    ) -> dict:
         async with aiohttp.ClientSession() as session:
             async with session.get(
-                url=Settings.VALIDATE_REFRESH, params={"refresh": token_refresh}
+                url=f"{Settings.VALIDATE_REFRESH}{token_refresh}",
             ) as response:
                 token = await response.text()
                 return json.loads(token)
@@ -50,11 +50,10 @@ class ValidTokens:
     @staticmethod
     async def send_access_token(
         token_access: str,
-    ) -> str:
+    ) -> dict:
         async with aiohttp.ClientSession() as session:
             async with session.get(
-                url=Settings.VALIDATE_ACCESS,
-                params={"access": token_access},
+                url=f"{Settings.VALIDATE_ACCESS}{token_access}",
             ) as response:
                 token = await response.text()
                 return token
