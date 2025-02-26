@@ -12,6 +12,7 @@ app.include_router(router_visitors)
 origins = [
     "http://localhost:3000",
     "https://register-666-ramzer.onrender.com",
+    " https://admin-panel-production-19ca.up.railway.app/",
 ]
 
 app.add_middleware(
