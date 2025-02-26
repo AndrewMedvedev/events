@@ -30,7 +30,7 @@ class ValidTokens:
                         self.response.delete_cookie(
                             key="access",
                             samesite=None,
-                            httponly=False,
+                            httponly=True,
                             secure=True,
                         )
                         return send_refresh

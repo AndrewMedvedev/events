@@ -41,7 +41,7 @@ class Visitors:
                 key="access",
                 value=check_tokens.get("access"),
                 samesite=None,
-                httponly=False,
+                httponly=True,
                 secure=True,
             )
         return JSONResponse(content=status.HTTP_200_OK)
@@ -58,7 +58,7 @@ class Visitors:
                 key="access",
                 value=check_tokens.get("access"),
                 samesite=None,
-                httponly=False,
+                httponly=True,
                 secure=True,
             )
         return [{"event_id": i.event_id} for i in events]
@@ -77,7 +77,7 @@ class Visitors:
                 key="access",
                 value=check_tokens.get("access"),
                 samesite=None,
-                httponly=False,
+                httponly=True,
                 secure=True,
             )
         return JSONResponse(content=status.HTTP_200_OK)
