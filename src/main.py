@@ -13,6 +13,7 @@ origins = [
     "http://localhost:3000",
     "https://register-666-ramzer.onrender.com",
     "https://admin-panel-production-19ca.up.railway.app",
+    "https://frontend-project-production-6352.up.railway.app",
 ]
 
 app.add_middleware(
