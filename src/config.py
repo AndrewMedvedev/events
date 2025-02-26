@@ -15,9 +15,6 @@ class Settings:
 
     GET_DATA: str = config["GET_DATA"]
 
-    VALIDATE_ACCESS: str = config["VALIDATE_ACCESS"]
-    VALIDATE_REFRESH: str = config["VALIDATE_REFRESH"]
-
 
 settings = Settings()
 
