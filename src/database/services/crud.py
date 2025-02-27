@@ -119,7 +119,7 @@ class CRUD(DatabaseSessionService):
         async with self.session() as session:
             obj = await session.execute(
                 select(Visitor).where(
-                    Visitor.user_id == user_id and Visitor.event_id == event_id
+                    Visitor.event_id == event_id and Visitor.user_id == user_id
                 )
             )
             try:
