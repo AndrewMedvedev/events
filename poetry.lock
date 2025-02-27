@@ -1492,6 +1492,17 @@ files = [
 ]
 
 [[package]]
+name = "segno"
+version = "1.6.1"
+description = "QR Code and Micro QR Code generator for Python"
+optional = false
+python-versions = ">=3.5"
+files = [
+    {file = "segno-1.6.1-py3-none-any.whl", hash = "sha256:e90c6ff82c633f757a96d4b1fb06cc932589b5237f33be653f52252544ac64df"},
+    {file = "segno-1.6.1.tar.gz", hash = "sha256:f23da78b059251c36e210d0cf5bfb1a9ec1604ae6e9f3d42f9a7c16d306d847e"},
+]
+
+[[package]]
 name = "shellingham"
 version = "1.5.4"
 description = "Tool to Detect Surrounding Shell"
@@ -2076,4 +2087,4 @@ propcache = ">=0.2.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "fa9018cdf107472bac8fdf13003ed4fadb66ecb3419e452d943af65cf0a5bba6"
+content-hash = "83f8bcc3321a37a210cafe96faa6da5dd951ca946e9500afc825562a0038c4bb"

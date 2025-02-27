@@ -50,6 +50,7 @@ class Visitor(Base):
     first_name: Mapped[str_nullable]
     last_name: Mapped[str_nullable]
     email: Mapped[str_nullable]
+    unique_string: Mapped[str_nullable]
     event: Mapped[list["Event"]] = relationship(
         "Event",
         back_populates="visitors",

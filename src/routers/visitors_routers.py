@@ -46,3 +46,28 @@ async def delete(
         return JSONResponse(
             content={"detail": str(e)},
         )
+
+
+@router_visitors.get("/make/qr/{user_id}/{event_id}")
+async def make_qr(user_id: int, event_id: int) -> JSONResponse:
+    try:
+        return await Visitors(
+            user_id=user_id,
+            event_id=event_id,
+        ).make_qr()
+    except Exception as e:
+        return JSONResponse(
+            content={"detail": str(e)},
+        )
+
+
+@router_visitors.get("/verify/{unique_string}")
+async def verify_visitor(unique_string: str) -> JSONResponse:
+    try:
+        return await Visitors.verify(
+            unique_string=unique_string,
+        )
+    except Exception as e:
+        return JSONResponse(
+            content={"detail": str(e)},
+        )
