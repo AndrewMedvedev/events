@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from sqlalchemy import select
-from src.database.models import Event, Visitor, PointsEvent
+
+from src.database.models import Event, PointsEvent, Visitor
 from src.database.services.orm import DatabaseSessionService
 
 

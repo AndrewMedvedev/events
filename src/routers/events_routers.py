@@ -1,9 +1,8 @@
 from fastapi import APIRouter, status
-from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
 from src.classes import Events
-from src.database.schemas import EventModel, EventModelUpdate
+from src.database.schemas import EventModel
 
 router_event = APIRouter(prefix="/api/v1/events", tags=["events"])
 

@@ -4,5 +4,5 @@ __all__ = (
     "PointsEvent",
 )
 
-from src.database.models.relationship_models import Event, Visitor
 from src.database.models.points_for_the_event_model import PointsEvent
+from src.database.models.relationship_models import Event, Visitor

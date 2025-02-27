@@ -1,8 +1,10 @@
+import uuid
+from io import BytesIO
+
+import pyqrcode
 from fastapi import status
 from fastapi.responses import JSONResponse
-import uuid
-import segno
-
+from starlette.responses import StreamingResponse
 
 from src.database import get_data
 from src.database.models import Visitor
@@ -29,7 +31,7 @@ class Visitors:
             last_name=data.get("last_name"),
             email=data.get("email"),
             event_id=self.event_id,
-            unique_string=str(uuid.uuid4()),
+            unique_string=f"{str(uuid.uuid4())}{str(uuid.uuid4())}",
         )
         await CRUD().create_visitor(user_model_visitor)
         return JSONResponse(
@@ -62,13 +64,24 @@ class Visitors:
         obj = await CRUD().verify_visitor(
             unique_string=unique_string,
         )
-        if obj != None:
+        if obj is not None:
             return JSONResponse(content="Зарегестрирован")
         else:
             return JSONResponse(content="Не зарегестрирован")
-        
 
     async def make_qr(self):
-        unique = await CRUD().get_visitor_unique_string(user_id=self.user_id, event_id=self.event_id)
-        qr = segno.make_qr(f"https://events-fastapi.onrender.com/api/v1/visitors/verify/{unique}")
-        return qr.show()
+        unique = await CRUD().get_visitor_unique_string(
+            user_id=self.user_id, event_id=self.event_id
+        )
+        if isinstance(unique, str):
+            qr = pyqrcode.create(
+                f"https://events-fastapi.onrender.com/api/v1/visitors/verify/{unique}"
+            )
+            buffer = BytesIO()
+            qr.png(buffer, scale=6)
+            buffer.seek(0)
+            headers = {
+                "Content-Type": "image/png",
+                "Content-Disposition": 'attachment; filename="qr_code.png"',
+            }
+            return StreamingResponse(buffer, media_type="image/png", headers=headers)

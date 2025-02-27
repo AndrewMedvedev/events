@@ -1,10 +1,6 @@
 from sqlalchemy.orm import Mapped
 
-from src.database.database import (
-    Base,
-    int_nullable,
-    int_pk,
-)
+from src.database.database import Base, int_nullable, int_pk
 
 
 class PointsEvent(Base):
