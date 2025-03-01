@@ -1,10 +1,6 @@
 import uuid
-from io import BytesIO
 
-import pyqrcode
-from fastapi import status
 from fastapi.responses import HTMLResponse, JSONResponse
-from starlette.responses import StreamingResponse
 
 from src.database import get_data
 from src.database.models import Visitor
@@ -33,10 +29,8 @@ class Visitors:
             event_id=self.event_id,
             unique_string=f"{str(uuid.uuid4())}{str(uuid.uuid4())}",
         )
-        await CRUD().create_visitor(user_model_visitor)
-        return JSONResponse(
-            content=status.HTTP_200_OK,
-        )
+        registration = await CRUD().create_visitor(user_model_visitor)
+        return JSONResponse(content=registration)
 
     async def get_user_events(self) -> list[dict]:
         events = await CRUD().get_visitors_events(
@@ -51,20 +45,20 @@ class Visitors:
         ]
 
     async def delete_user(self) -> JSONResponse:
-        await CRUD().delete_visitor(
+        delete = await CRUD().delete_visitor(
             user_id=self.user_id,
             event_id=self.event_id,
         )
         return JSONResponse(
-            content=status.HTTP_200_OK,
+            content=delete,
         )
 
     @staticmethod
-    async def verify(unique_string: str) -> JSONResponse:
+    async def verify(unique_string: str) -> HTMLResponse:
         obj = await CRUD().verify_visitor(
             unique_string=unique_string,
         )
-        if obj is not None:
+        if obj.unique_string is not None:
             html_content = """<!DOCTYPE html>
             <html lang="ru">
             <head>
@@ -97,19 +91,4 @@ class Visitors:
             </html>"""
             return HTMLResponse(content=html_content)
 
-    async def make_qr(self):
-        unique = await CRUD().get_visitor_unique_string(
-            user_id=self.user_id, event_id=self.event_id
-        )
-        if isinstance(unique, str):
-            qr = pyqrcode.create(
-                f"https://events-fastapi.onrender.com/api/v1/visitors/verify/{unique}"
-            )
-            buffer = BytesIO()
-            qr.png(buffer, scale=6)
-            buffer.seek(0)
-            headers = {
-                "Content-Type": "image/png",
-                "Content-Disposition": 'attachment; filename="qr_code.png"',
-            }
-            return StreamingResponse(buffer, media_type="image/png", headers=headers)
+    

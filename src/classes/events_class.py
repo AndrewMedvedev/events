@@ -20,8 +20,10 @@ class Events:
                 limit_people=self.model.limit_people,
                 points_for_the_event=self.model.points_for_the_event,
             )
-            await CRUD().create_event(model=data)
-            return JSONResponse(content=status.HTTP_200_OK)
+            create = await CRUD().create_event(model=data)
+            return JSONResponse(
+                content=create,
+            )
         except Exception as e:
             return JSONResponse(content=e)
 
@@ -50,7 +52,9 @@ class Events:
         model_id: int,
     ) -> JSONResponse:
         try:
-            await CRUD().delete_event(model_id=model_id)
-            return JSONResponse(content=status.HTTP_200_OK)
+            delete = await CRUD().delete_event(model_id=model_id)
+            return JSONResponse(
+                content=delete,
+            )
         except Exception as e:
             return JSONResponse(content=e)

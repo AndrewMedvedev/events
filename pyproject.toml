@@ -15,7 +15,6 @@ sqlalchemy = "^2.0.38"
 alembic = "^1.14.1"
 asyncpg = "^0.30.0"
 ruff = "^0.9.7"
-segno = "^1.6.1"
 pyqrcode = "^1.2.1"
 pypng = "^0.20220715.0"
 
