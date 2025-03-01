@@ -3,14 +3,8 @@ from datetime import datetime
 from sqlalchemy import DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.database.database import (
-    Base,
-    int_null_true,
-    int_nullable,
-    int_pk,
-    str_nullable,
-    str_uniq,
-)
+from src.database.database import (Base, int_null_true, int_nullable, int_pk,
+                                   str_nullable, str_uniq)
 
 
 class Event(Base):
