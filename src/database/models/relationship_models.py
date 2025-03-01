@@ -1,10 +1,16 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey
+from sqlalchemy import DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.database.database import (Base, int_null_true, int_nullable, int_pk,
-                                   str_nullable, str_uniq)
+from src.database.database import (
+    Base,
+    int_null_true,
+    int_nullable,
+    int_pk,
+    str_nullable,
+    str_uniq,
+)
 
 
 class Event(Base):
@@ -37,8 +43,6 @@ class Event(Base):
 
 class Visitor(Base):
 
-    __table_args__ = {"extend_existing": True}
-
     id: Mapped[int_pk]
     user_id: Mapped[int_nullable]
     event_id: Mapped[int] = mapped_column(ForeignKey("events.id"))
@@ -49,6 +53,11 @@ class Visitor(Base):
     event: Mapped[list["Event"]] = relationship(
         "Event",
         back_populates="visitors",
+    )
+
+    __table_args__ = (
+        UniqueConstraint("user_id", "event_id", "first_name", "last_name", "email"),
+        {"extend_existing": True},
     )
 
     def __str__(self):

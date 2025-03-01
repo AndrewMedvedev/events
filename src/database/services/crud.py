@@ -69,10 +69,13 @@ class CRUD(DatabaseSessionService):
         model: Visitor,
     ) -> dict:
         async with self.session() as session:
-            session.add(model)
-            await session.commit()
-            await session.refresh(model)
-        return {"message": 200}
+            try: 
+                session.add(model)
+                await session.commit()
+                await session.refresh(model)
+                return {"message": 200}
+            except:
+                return {"message" : "Вы уже зарегестрированы на это мероприятие"}
 
     async def get_visitors_events(
         self,
