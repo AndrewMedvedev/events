@@ -69,13 +69,13 @@ class CRUD(DatabaseSessionService):
         model: Visitor,
     ) -> dict:
         async with self.session() as session:
-            try: 
+            try:
                 session.add(model)
                 await session.commit()
                 await session.refresh(model)
                 return {"message": 200}
-            except:
-                return {"message" : "Вы уже зарегестрированы на это мероприятие"}
+            except Exception:
+                return {"message": "Вы уже зарегестрированы на это мероприятие"}
 
     async def get_visitors_events(
         self,
@@ -113,24 +113,14 @@ class CRUD(DatabaseSessionService):
 
     async def verify_visitor(self, unique_string: str) -> str:
         async with self.session() as session:
-            obj = await session.execute(
-                select(Visitor).where(Visitor.unique_string == unique_string)
-            )
-            return obj.scalar()
-
-    async def get_visitor_unique_string(self, user_id: int, event_id: int) -> str:
-        async with self.session() as session:
-            obj = await session.execute(
-                select(Visitor).where(
-                    Visitor.event_id == event_id and Visitor.user_id == user_id
+            try: 
+                obj = await session.execute(
+                    select(Visitor).where(Visitor.unique_string == unique_string)
                 )
-            )
-            try:
-                unique = obj.scalar()
-                return unique.unique_string
-            except Exception as e:
-                print(e)
-                return e
+                scalar = obj.scalar()
+                return scalar.unique_string
+            except Exception:
+                return None
 
     # async def create_points(self, model: PointsEvent) -> dict:
     #     async with self.session() as session:

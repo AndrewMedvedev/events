@@ -1,4 +1,3 @@
-
 from fastapi.responses import JSONResponse
 
 from src.database.models import Event
@@ -9,10 +8,12 @@ from src.database.services import CRUD
 class Events:
     def __init__(self, model: EventModel = None) -> None:
         self.model = model
+        self.crud = CRUD()
+        self.event = Event
 
     async def add_event(self) -> JSONResponse:
         try:
-            data = Event(
+            data = self.event(
                 name_event=self.model.name_event,
                 date_time=self.model.date_time,
                 location=self.model.location,
@@ -20,16 +21,15 @@ class Events:
                 limit_people=self.model.limit_people,
                 points_for_the_event=self.model.points_for_the_event,
             )
-            create = await CRUD().create_event(model=data)
             return JSONResponse(
-                content=create,
+                content=await self.crud.create_event(model=data),
             )
         except Exception as e:
             return JSONResponse(content=e)
 
     async def get_events(self) -> dict:
         try:
-            return await CRUD().read_event()
+            return await self.crud.read_event()
         except Exception as e:
             return JSONResponse(content=e)
 
@@ -52,9 +52,8 @@ class Events:
         model_id: int,
     ) -> JSONResponse:
         try:
-            delete = await CRUD().delete_event(model_id=model_id)
             return JSONResponse(
-                content=delete,
+                content=await self.crud.delete_event(model_id=model_id),
             )
         except Exception as e:
             return JSONResponse(content=e)

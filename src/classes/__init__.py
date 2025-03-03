@@ -1,6 +1,6 @@
 __all__ = (
     "Events",
-    "Visitors"
+    "Visitors",
 )
 
 from src.classes.events_class import Events

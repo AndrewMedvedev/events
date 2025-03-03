@@ -2,7 +2,7 @@ import uuid
 
 from fastapi.responses import HTMLResponse, JSONResponse
 
-from src.database import get_data
+from src.database import get_user_data
 from src.database.models import Visitor
 from src.database.services.crud import CRUD
 
@@ -11,17 +11,19 @@ class Visitors:
 
     def __init__(
         self,
-        user_id: int,
+        user_id: int = None,
         event_id: int = None,
     ) -> None:
         self.user_id = user_id
         self.event_id = event_id
+        self.crud = CRUD()
+        self.visitor = Visitor
 
     async def add_user(self) -> JSONResponse:
-        data = await get_data(
+        data = await get_user_data(
             self.user_id,
         )
-        user_model_visitor = Visitor(
+        user_model_visitor = self.visitor(
             user_id=self.user_id,
             first_name=data.get("first_name"),
             last_name=data.get("last_name"),
@@ -29,11 +31,10 @@ class Visitors:
             event_id=self.event_id,
             unique_string=f"{str(uuid.uuid4())}{str(uuid.uuid4())}",
         )
-        registration = await CRUD().create_visitor(user_model_visitor)
-        return JSONResponse(content=registration)
+        return JSONResponse(content=await self.crud.create_visitor(user_model_visitor))
 
     async def get_user_events(self) -> list[dict]:
-        events = await CRUD().get_visitors_events(
+        events = await self.crud.get_visitors_events(
             user_id=self.user_id,
         )
         return [
@@ -45,7 +46,7 @@ class Visitors:
         ]
 
     async def delete_user(self) -> JSONResponse:
-        delete = await CRUD().delete_visitor(
+        delete = await self.crud.delete_visitor(
             user_id=self.user_id,
             event_id=self.event_id,
         )
@@ -53,12 +54,14 @@ class Visitors:
             content=delete,
         )
 
-    @staticmethod
-    async def verify(unique_string: str) -> HTMLResponse:
-        obj = await CRUD().verify_visitor(
+    async def verify(
+        self,
+        unique_string: str,
+    ) -> HTMLResponse:
+        verify_unique_string = await self.crud.verify_visitor(
             unique_string=unique_string,
         )
-        if obj.unique_string is not None:
+        if verify_unique_string is not None:
             html_content = """<!DOCTYPE html>
             <html lang="ru">
             <head>
@@ -90,5 +93,3 @@ class Visitors:
             </body>
             </html>"""
             return HTMLResponse(content=html_content)
-
-    

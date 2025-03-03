@@ -1,5 +1,5 @@
 __all__ = (
-    "get_data"
+    "get_user_data",
 )
 
-from src.database.controls import get_data
+from src.database.controls import get_user_data

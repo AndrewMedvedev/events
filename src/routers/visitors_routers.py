@@ -54,7 +54,7 @@ async def delete(
 )
 async def verify_visitor(unique_string: str) -> HTMLResponse | JSONResponse:
     try:
-        return await Visitors.verify(
+        return await Visitors().verify(
             unique_string=unique_string,
         )
     except Exception as e:
