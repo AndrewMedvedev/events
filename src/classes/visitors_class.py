@@ -5,9 +5,10 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from src.database import get_user_data
 from src.database.models import Visitor
 from src.database.services.crud import CRUD
+from src.interfaces import VisitorBase
 
 
-class Visitors:
+class Visitors(VisitorBase):
 
     def __init__(
         self,

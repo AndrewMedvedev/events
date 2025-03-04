@@ -3,9 +3,10 @@ from fastapi.responses import JSONResponse
 from src.database.models import Event
 from src.database.schemas import EventModel
 from src.database.services import CRUD
+from src.interfaces import EventBase
 
 
-class Events:
+class Events(EventBase):
     def __init__(self, model: EventModel = None) -> None:
         self.model = model
         self.crud = CRUD()

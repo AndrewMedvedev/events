@@ -3,9 +3,10 @@ from sqlalchemy import select
 
 from src.database.models import Event, PointsEvent, Visitor
 from src.database.services.orm import DatabaseSessionService
+from src.interfaces import CRUDEventBase, CRUDVisitorBase
 
 
-class CRUD(DatabaseSessionService):
+class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
     def __init__(self) -> None:
         super().__init__()
         self.init()
@@ -97,11 +98,17 @@ class CRUD(DatabaseSessionService):
         event_id: int,
     ) -> dict | str:
         async with self.session() as session:
+            # obj = await session.execute(
+            #     select(Visitor).where(
+            #         Visitor.event_id == event_id and Visitor.user_id == user_id
+            #     )
+            # )
             obj = await session.execute(
-                select(Visitor).where(
-                    Visitor.user_id == user_id and Visitor.event_id == event_id
+                select(Visitor).filter(
+                    Visitor.event_id == event_id and Visitor.user_id == user_id
                 )
             )
+
             try:
                 if obj:
                     await session.delete(obj.scalar())
@@ -113,7 +120,7 @@ class CRUD(DatabaseSessionService):
 
     async def verify_visitor(self, unique_string: str) -> str:
         async with self.session() as session:
-            try: 
+            try:
                 obj = await session.execute(
                     select(Visitor).where(Visitor.unique_string == unique_string)
                 )
