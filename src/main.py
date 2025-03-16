@@ -1,9 +1,14 @@
+import logging
+
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from src.database import config_logging
 from src.errors import DataBaseError, SendError
 from src.routers import router_event, router_visitors
+
+config_logging(level=logging.INFO)
 
 app = FastAPI(title="Админ панель личного аккаунта")
 

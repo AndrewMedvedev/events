@@ -2,16 +2,16 @@ import logging
 
 from fastapi.responses import JSONResponse
 
-from src.database import config_logging
 from src.database.models import Event
 from src.database.schemas import EventModel
 from src.database.services import CRUD
 from src.interfaces import EventBase
 
+log = logging.getLogger(__name__)
 
 class Events(EventBase):
 
-    config_logging(level=logging.WARNING)
+
 
     def __init__(self) -> None:
         self.crud = CRUD()

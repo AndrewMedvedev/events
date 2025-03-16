@@ -1,11 +1,11 @@
 import logging
-from venv import logger
 
 import aiohttp
 
 from src.config import Settings
 from src.errors.errors import SendError
 
+log = logging.getLogger(__name__)
 
 async def get_user_data(user_id: int) -> dict:
     async with aiohttp.ClientSession() as session:
@@ -15,7 +15,7 @@ async def get_user_data(user_id: int) -> dict:
         ) as data:
             try:
                 user_data = await data.json()
-                logger.warning(user_data)
+                log.info(user_data)
                 if "email" in user_data:
                     return user_data
                 raise SendError("get_user_data")

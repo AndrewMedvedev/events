@@ -3,15 +3,16 @@ import uuid
 
 from fastapi.responses import HTMLResponse, JSONResponse
 
-from src.database import config_logging, get_user_data
+from src.database import get_user_data
 from src.database.models import Visitor
 from src.database.services.crud import CRUD
 from src.interfaces import VisitorBase
 
+log = logging.getLogger(__name__)
 
 class Visitors(VisitorBase):
 
-    config_logging(logging.WARNING)
+
 
     def __init__(self) -> None:
         self.crud = CRUD()
