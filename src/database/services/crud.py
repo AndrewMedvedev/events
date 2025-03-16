@@ -3,9 +3,8 @@ from sqlalchemy import select
 
 from src.database.models import Event, Visitor
 from src.database.services.orm import DatabaseSessionService
-from src.interfaces import CRUDEventBase, CRUDVisitorBase
 from src.errors import DataBaseError
-
+from src.interfaces import CRUDEventBase, CRUDVisitorBase
 
 
 class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):

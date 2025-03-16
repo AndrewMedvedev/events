@@ -1,9 +1,10 @@
-from venv import logger
-import aiohttp
 import logging
+from venv import logger
 
-from src.errors.errors import SendError
+import aiohttp
+
 from src.config import Settings
+from src.errors.errors import SendError
 
 
 async def get_user_data(user_id: int) -> dict:
@@ -22,7 +23,7 @@ async def get_user_data(user_id: int) -> dict:
                 raise SendError("get_user_data")
 
 
-def config_logging(level):
+def config_logging(level=logging.INFO):
     logging.basicConfig(
         level=level,
         datefmt="%Y-%m-%d %H:%M:%S",

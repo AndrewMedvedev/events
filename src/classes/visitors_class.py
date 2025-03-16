@@ -3,8 +3,7 @@ import uuid
 
 from fastapi.responses import HTMLResponse, JSONResponse
 
-
-from src.database import get_user_data, config_logging
+from src.database import config_logging, get_user_data
 from src.database.models import Visitor
 from src.database.services.crud import CRUD
 from src.interfaces import VisitorBase

@@ -2,8 +2,8 @@ from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from src.routers import router_event, router_visitors
 from src.errors import DataBaseError, SendError
+from src.routers import router_event, router_visitors
 
 app = FastAPI(title="Админ панель личного аккаунта")
 
@@ -40,7 +40,7 @@ async def db_error(
 
 
 @app.exception_handler(SendError)
-async def db_error(
+async def send_error(
     request: Request,
     exc: SendError,
 ) -> JSONResponse:

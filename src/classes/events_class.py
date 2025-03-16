@@ -1,11 +1,12 @@
 import logging
+
 from fastapi.responses import JSONResponse
 
+from src.database import config_logging
 from src.database.models import Event
 from src.database.schemas import EventModel
 from src.database.services import CRUD
 from src.interfaces import EventBase
-from src.database import config_logging
 
 
 class Events(EventBase):
