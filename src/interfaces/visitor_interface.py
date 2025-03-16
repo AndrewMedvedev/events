@@ -6,20 +6,17 @@ from fastapi.responses import HTMLResponse, JSONResponse
 class VisitorBase(ABC):
 
     @abstractmethod
-    async def add_user(self) -> JSONResponse:
+    async def add_user() -> JSONResponse:
         raise NotImplementedError
 
     @abstractmethod
-    async def get_user_events(self) -> list[dict]:
+    async def get_user_events() -> list[dict]:
         raise NotImplementedError
 
     @abstractmethod
-    async def delete_user(self) -> JSONResponse:
+    async def delete_user() -> JSONResponse:
         raise NotImplementedError
 
     @abstractmethod
-    async def verify(
-        self,
-        unique_string: str,
-    ) -> HTMLResponse:
+    async def verify() -> HTMLResponse:
         raise NotImplementedError

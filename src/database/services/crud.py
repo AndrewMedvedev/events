@@ -1,9 +1,11 @@
 from pydantic import BaseModel
 from sqlalchemy import select
 
-from src.database.models import Event, PointsEvent, Visitor
+from src.database.models import Event, Visitor
 from src.database.services.orm import DatabaseSessionService
 from src.interfaces import CRUDEventBase, CRUDVisitorBase
+from src.errors import DataBaseError
+
 
 
 class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
@@ -21,19 +23,22 @@ class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
                 await session.commit()
                 await session.refresh(model)
                 return {"message": 200}
-            except Exception as e:
-                print(e)
+            except DataBaseError:
+                raise DataBaseError("create_event")
 
     async def read_event(self) -> list[dict]:
         async with self.session() as session:
             events = await session.execute(select(Event))
         try:
             return events.scalars().all()
-        except Exception as _ex:
-            print(_ex)
-            return _ex
+        except DataBaseError:
+                raise DataBaseError("read_event")
 
-    async def update_event(self, event_id: int, values: BaseModel) -> dict:
+    async def update_event(
+        self,
+        event_id: int,
+        values: BaseModel,
+    ) -> dict:
         try:
             event = Event(
                 id=event_id,
@@ -46,14 +51,13 @@ class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
                 await session.merge(event)
                 await session.commit()
                 return {"message": 200}
-        except Exception as _ex:
-            print(_ex)
-            return _ex
+        except DataBaseError:
+                raise DataBaseError("update_event")
 
     async def delete_event(
         self,
         model_id: int,
-    ) -> dict | str:
+    ) -> dict:
         async with self.session() as session:
             obj = await session.get(Event, model_id)
             try:
@@ -61,9 +65,9 @@ class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
                     await session.delete(obj)
                     await session.commit()
                     return {"message": 200}
-            except Exception as e:
-                print(e)
-                return e
+                raise DataBaseError("delete_event")
+            except DataBaseError:
+                raise DataBaseError("delete_event")
 
     async def create_visitor(
         self,
@@ -75,8 +79,8 @@ class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
                 await session.commit()
                 await session.refresh(model)
                 return {"message": 200}
-            except Exception:
-                return {"message": "Вы уже зарегестрированы на это мероприятие"}
+            except DataBaseError:
+                raise DataBaseError("creatcreate_visitore_event")
 
     async def get_visitors_events(
         self,
@@ -88,21 +92,15 @@ class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
             )
             try:
                 return data.scalars().all()
-            except Exception as _ex:
-                print(_ex)
-                return _ex
+            except DataBaseError:
+                raise DataBaseError("get_visitors_events")
 
     async def delete_visitor(
         self,
         user_id: int,
         event_id: int,
-    ) -> dict | str:
+    ) -> dict:
         async with self.session() as session:
-            # obj = await session.execute(
-            #     select(Visitor).where(
-            #         Visitor.event_id == event_id and Visitor.user_id == user_id
-            #     )
-            # )
             obj = await session.execute(
                 select(Visitor).filter(
                     Visitor.event_id == event_id and Visitor.user_id == user_id
@@ -114,9 +112,9 @@ class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
                     await session.delete(obj.scalar())
                     await session.commit()
                     return {"message": 200}
-            except Exception as e:
-                print(e)
-                return e
+                raise DataBaseError("delete_visitor")
+            except DataBaseError:
+                raise DataBaseError("delete_visitor")
 
     async def verify_visitor(self, unique_string: str) -> str:
         async with self.session() as session:

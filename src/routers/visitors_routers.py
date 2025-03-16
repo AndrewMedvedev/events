@@ -11,25 +11,15 @@ async def add(
     event_id: int,
     user_id: int,
 ) -> JSONResponse:
-    try:
-        return await Visitors(
-            user_id=user_id,
-            event_id=event_id,
-        ).add_user()
-    except Exception as e:
-        return JSONResponse(
-            content={"detail": str(e)},
-        )
+    return await Visitors().add_user(
+        user_id=user_id,
+        event_id=event_id,
+    )
 
 
 @router_visitors.get("/get/{user_id}")
 async def get(user_id: int) -> JSONResponse:
-    try:
-        return await Visitors(user_id=user_id).get_user_events()
-    except Exception as e:
-        return JSONResponse(
-            content={"detail": str(e)},
-        )
+    return await Visitors().get_user_events(user_id=user_id)
 
 
 @router_visitors.delete("/delete/{event_id}/{user_id}")
@@ -37,15 +27,10 @@ async def delete(
     event_id: int,
     user_id: int,
 ) -> JSONResponse:
-    try:
-        return await Visitors(
-            user_id=user_id,
-            event_id=event_id,
-        ).delete_user()
-    except Exception as e:
-        return JSONResponse(
-            content={"detail": str(e)},
-        )
+    return await Visitors().delete_user(
+        user_id=user_id,
+        event_id=event_id,
+    )
 
 
 @router_visitors.get(
@@ -53,11 +38,6 @@ async def delete(
     response_model=None,
 )
 async def verify_visitor(unique_string: str) -> HTMLResponse | JSONResponse:
-    try:
-        return await Visitors().verify(
-            unique_string=unique_string,
-        )
-    except Exception as e:
-        return JSONResponse(
-            content={"detail": str(e)},
-        )
+    return await Visitors().verify(
+        unique_string=unique_string,
+    )

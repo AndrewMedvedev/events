@@ -1,8 +1,10 @@
+import logging
 import uuid
 
 from fastapi.responses import HTMLResponse, JSONResponse
 
-from src.database import get_user_data
+
+from src.database import get_user_data, config_logging
 from src.database.models import Visitor
 from src.database.services.crud import CRUD
 from src.interfaces import VisitorBase
@@ -10,33 +12,36 @@ from src.interfaces import VisitorBase
 
 class Visitors(VisitorBase):
 
-    def __init__(
-        self,
-        user_id: int = None,
-        event_id: int = None,
-    ) -> None:
-        self.user_id = user_id
-        self.event_id = event_id
+    config_logging(logging.WARNING)
+
+    def __init__(self) -> None:
         self.crud = CRUD()
         self.visitor = Visitor
 
-    async def add_user(self) -> JSONResponse:
+    async def add_user(
+        self,
+        user_id: int,
+        event_id: int,
+    ) -> JSONResponse:
         data = await get_user_data(
-            self.user_id,
+            user_id,
         )
         user_model_visitor = self.visitor(
-            user_id=self.user_id,
+            user_id=user_id,
             first_name=data.get("first_name"),
             last_name=data.get("last_name"),
             email=data.get("email"),
-            event_id=self.event_id,
+            event_id=event_id,
             unique_string=f"{str(uuid.uuid4())}{str(uuid.uuid4())}",
         )
         return JSONResponse(content=await self.crud.create_visitor(user_model_visitor))
 
-    async def get_user_events(self) -> list[dict]:
+    async def get_user_events(
+        self,
+        user_id: int,
+    ) -> list[dict]:
         events = await self.crud.get_visitors_events(
-            user_id=self.user_id,
+            user_id=user_id,
         )
         return [
             {
@@ -46,10 +51,14 @@ class Visitors(VisitorBase):
             for i in events
         ]
 
-    async def delete_user(self) -> JSONResponse:
+    async def delete_user(
+        self,
+        user_id: int,
+        event_id: int,
+    ) -> JSONResponse:
         delete = await self.crud.delete_visitor(
-            user_id=self.user_id,
-            event_id=self.event_id,
+            user_id=user_id,
+            event_id=event_id,
         )
         return JSONResponse(
             content=delete,
