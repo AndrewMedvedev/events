@@ -22,6 +22,7 @@ origins = [
     "https://admin-panel-production-19ca.up.railway.app",
     "https://frontend-project-production-6352.up.railway.app",
     "https://admin-panel11.onrender.com",
+    "https://online-service-for-applicants.onrender.com",
 ]
 
 app.add_middleware(
