@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from sqlalchemy import select
+from sqlalchemy import select, func
 
 from src.database.models import Event, Visitor
 from src.database.services.orm import DatabaseSessionService
@@ -23,7 +23,7 @@ class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
                 await session.refresh(model)
                 return {"message": 200}
             except DataBaseError:
-                raise DataBaseError("create_event")
+                raise DataBaseError(name="create_event", message="Не получилось добавить")
 
     async def read_event(self) -> list[dict]:
         async with self.session() as session:
@@ -31,7 +31,7 @@ class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
         try:
             return events.scalars().all()
         except DataBaseError:
-                raise DataBaseError("read_event")
+                raise DataBaseError(name="read_event",message="Не получилось получить все записи")
 
     async def update_event(
         self,
@@ -51,7 +51,7 @@ class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
                 await session.commit()
                 return {"message": 200}
         except DataBaseError:
-                raise DataBaseError("update_event")
+                raise DataBaseError(name="update_event")
 
     async def delete_event(
         self,
@@ -64,9 +64,9 @@ class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
                     await session.delete(obj)
                     await session.commit()
                     return {"message": 200}
-                raise DataBaseError("delete_event")
+                raise DataBaseError(name="delete_event",message="Не получилось удалить")
             except DataBaseError:
-                raise DataBaseError("delete_event")
+                raise DataBaseError(name="delete_event",message="Не получилось удалить")
 
     async def create_visitor(
         self,
@@ -74,12 +74,18 @@ class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
     ) -> dict:
         async with self.session() as session:
             try:
-                session.add(model)
-                await session.commit()
-                await session.refresh(model)
-                return {"message": 200}
+                counts = await session.scalar(select(Event.limit_people).where(Event.id == model.event_id))
+                counts_visitors = await session.execute(select(func.count()).select_from(Visitor).filter(Visitor.event_id == model.event_id))
+                if counts_visitors.scalar() < counts:
+                    session.add(model)
+                    await session.commit()
+                    await session.refresh(model)
+                    return {"message": 200}
+                else:
+                    raise DataBaseError(name="create_visitor",message="Нельзя зарегестрироваться, нету мест")
+
             except DataBaseError:
-                raise DataBaseError("creatcreate_visitore_event")
+                raise DataBaseError(name="create_visitor",message="Нельзя зарегестрироваться, нету мест")
 
     async def get_visitors_events(
         self,
@@ -92,7 +98,7 @@ class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
             try:
                 return data.scalars().all()
             except DataBaseError:
-                raise DataBaseError("get_visitors_events")
+                raise DataBaseError(name="get_visitors_events", message="Не получилось")
 
     async def delete_visitor(
         self,
@@ -111,9 +117,9 @@ class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
                     await session.delete(obj.scalar())
                     await session.commit()
                     return {"message": 200}
-                raise DataBaseError("delete_visitor")
+                raise DataBaseError(name="delete_visitor", message="Не получилось")
             except DataBaseError:
-                raise DataBaseError("delete_visitor")
+                raise DataBaseError(name="delete_visitor", message="Не получилось")
 
     async def verify_visitor(self, unique_string: str) -> str:
         async with self.session() as session:
