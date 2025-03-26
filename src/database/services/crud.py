@@ -147,8 +147,8 @@ class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
                 obj = await session.execute(
                     select(Visitor).where(Visitor.unique_string == unique_string)
                 )
-                scalar = obj.scalar()
-                return scalar.unique_string
+                scalars = obj.scalar()
+                return scalars
             except Exception:
                 return None
 
