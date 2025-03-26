@@ -23,7 +23,9 @@ class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
                 await session.refresh(model)
                 return {"message": 200}
             except DataBaseError:
-                raise DataBaseError(name="create_event", message="Не получилось добавить")
+                raise DataBaseError(
+                    name="create_event", message="Не получилось добавить"
+                )
 
     async def read_event(self) -> list[dict]:
         async with self.session() as session:
@@ -31,7 +33,9 @@ class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
         try:
             return events.scalars().all()
         except DataBaseError:
-                raise DataBaseError(name="read_event",message="Не получилось получить все записи")
+            raise DataBaseError(
+                name="read_event", message="Не получилось получить все записи"
+            )
 
     async def update_event(
         self,
@@ -51,7 +55,7 @@ class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
                 await session.commit()
                 return {"message": 200}
         except DataBaseError:
-                raise DataBaseError(name="update_event")
+            raise DataBaseError(name="update_event")
 
     async def delete_event(
         self,
@@ -64,9 +68,13 @@ class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
                     await session.delete(obj)
                     await session.commit()
                     return {"message": 200}
-                raise DataBaseError(name="delete_event",message="Не получилось удалить")
+                raise DataBaseError(
+                    name="delete_event", message="Не получилось удалить"
+                )
             except DataBaseError:
-                raise DataBaseError(name="delete_event",message="Не получилось удалить")
+                raise DataBaseError(
+                    name="delete_event", message="Не получилось удалить"
+                )
 
     async def create_visitor(
         self,
@@ -74,18 +82,30 @@ class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
     ) -> dict:
         async with self.session() as session:
             try:
-                counts = await session.scalar(select(Event.limit_people).where(Event.id == model.event_id))
-                counts_visitors = await session.execute(select(func.count()).select_from(Visitor).filter(Visitor.event_id == model.event_id))
-                if counts_visitors.scalar() < counts:
+                counts = await session.scalar(
+                    select(Event.limit_people).where(Event.id == model.event_id)
+                )
+                counts_visitors = await session.execute(
+                    select(func.count())
+                    .select_from(Visitor)
+                    .filter(Visitor.event_id == model.event_id)
+                )
+                if counts_visitors.scalar() < counts or counts == 0:
                     session.add(model)
                     await session.commit()
                     await session.refresh(model)
                     return {"message": 200}
                 else:
-                    raise DataBaseError(name="create_visitor",message="Нельзя зарегестрироваться, нету мест")
+                    raise DataBaseError(
+                        name="create_visitor",
+                        message="Нельзя зарегестрироваться, нету мест",
+                    )
 
             except DataBaseError:
-                raise DataBaseError(name="create_visitor",message="Нельзя зарегестрироваться, нету мест")
+                raise DataBaseError(
+                    name="create_visitor",
+                    message="Нельзя зарегестрироваться, нету мест",
+                )
 
     async def get_visitors_events(
         self,
