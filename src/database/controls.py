@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 import aiohttp
 
@@ -13,15 +14,22 @@ async def get_user_data(user_id: int) -> dict:
             url=f"{Settings.GET_DATA}{user_id}",
             ssl=False,
         ) as data:
-            try:
-                user_data = await data.json()
-                log.info(user_data)
-                if "email" in user_data:
-                    return user_data
-                raise SendError("get_user_data")
-            except SendError:
-                raise SendError("get_user_data")
+            return await valid_answer(response=data, name_func="get_user_data")
 
+async def valid_answer(
+    response: Any,
+    name_func: str,
+):
+    try:
+        log.warning(await response.text())
+        if response.status == 200:
+            data_dict = await response.json()
+            log.warning(data_dict)
+            return data_dict
+        else:
+            raise SendError(name_func)
+    except Exception:
+        raise SendError(name_func)
 
 def config_logging(level=logging.INFO):
     logging.basicConfig(

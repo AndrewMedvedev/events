@@ -22,9 +22,9 @@ class Visitors(VisitorBase):
         user_id: int,
         event_id: int,
     ) -> JSONResponse:
-        data = await get_user_data(
+        data = (await get_user_data(
             user_id,
-        )
+        )).get("body")
         user_model_visitor = self.visitor(
             user_id=user_id,
             first_name=data.get("first_name"),

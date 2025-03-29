@@ -1,6 +1,8 @@
 __all__ = (
     "EventModel",
     "EventModelUpdate",
+    "NewsModel",
 )
 
-from src.database.schemas.events_schemas import EventModel, EventModelUpdate
+from .events_schemas import EventModel, EventModelUpdate
+from .news_schemas import NewsModel

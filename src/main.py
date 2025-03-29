@@ -6,13 +6,15 @@ from fastapi.responses import JSONResponse
 
 from src.database import config_logging
 from src.errors import DataBaseError, SendError
-from src.routers import router_event, router_visitors
+from src.routers import router_event, router_visitors, router_news
 
 config_logging(level=logging.INFO)
 
 app = FastAPI(title="Админ панель личного аккаунта")
 
 app.include_router(router_event)
+
+app.include_router(router_news)
 
 app.include_router(router_visitors)
 

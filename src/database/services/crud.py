@@ -1,13 +1,18 @@
 from pydantic import BaseModel
 from sqlalchemy import select, func
 
-from src.database.models import Event, Visitor
+from src.database.models import Event, Visitor, New
 from src.database.services.orm import DatabaseSessionService
 from src.errors import DataBaseError
-from src.interfaces import CRUDEventBase, CRUDVisitorBase
+from src.interfaces import CRUDEventBase, CRUDVisitorBase, CRUDNewsBase
 
 
-class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
+class CRUD(
+    DatabaseSessionService,
+    CRUDEventBase,
+    CRUDVisitorBase,
+    CRUDNewsBase,
+):
     def __init__(self) -> None:
         super().__init__()
         self.init()
@@ -152,27 +157,42 @@ class CRUD(DatabaseSessionService, CRUDEventBase, CRUDVisitorBase):
             except Exception:
                 return None
 
-    # async def create_points(self, model: PointsEvent) -> dict:
-    #     async with self.session() as session:
-    #         try:
-    #             session.add(model)
-    #             await session.commit()
-    #             await session.refresh(model)
-    #             return {"message": 200}
-    #         except Exception as e:
-    #             print(e)
+    async def create_news(
+        self,
+        model: New,
+    ) -> dict:
+        async with self.session() as session:
+            try:
+                session.add(model)
+                await session.commit()
+                await session.refresh(model)
+                return {"message": 200}
+            except DataBaseError:
+                raise DataBaseError(
+                    name="create_news", message="Не получилось добавить"
+                )
 
-    # async def add_points(self, user_id: int, point: int) -> dict:
-    #     async with self.session() as session:
-    #         obj = (
-    #             await session.execute(
-    #                 select(PointsEvent).where(PointsEvent.user_id == user_id)
-    #             )
-    #         ).scalar()
-    #         try:
-    #             if obj:
-    #                 obj.points += point
-    #                 await session.commit()
-    #                 return {"message": 200}
-    #         except Exception as e:
-    #             print(e)
+    async def get_news(self) -> list[dict]:
+        async with self.session() as session:
+            events = await session.execute(select(New))
+        try:
+            return events.scalars().all()
+        except DataBaseError:
+            raise DataBaseError(
+                name="get_news", message="Не получилось получить все записи"
+            )
+
+    async def delete_news(
+        self,
+        news_id: int,
+    ) -> dict:
+        async with self.session() as session:
+            obj = await session.execute(select(New).filter(New.id == news_id))
+            try:
+                if obj:
+                    await session.delete(obj.scalar())
+                    await session.commit()
+                    return {"message": 200}
+                raise DataBaseError(name="delete_news", message="Не получилось")
+            except DataBaseError:
+                raise DataBaseError(name="delete_news", message="Не получилось")
