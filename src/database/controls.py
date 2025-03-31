@@ -4,7 +4,8 @@ from typing import Any
 from uuid import uuid4
 
 import aiohttp
-from fastapi import Path, UploadFile
+from fastapi import UploadFile
+from pathlib import Path
 
 from src.config import Settings
 from src.errors.errors import SendError
