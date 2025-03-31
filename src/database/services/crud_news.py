@@ -63,7 +63,7 @@ class CRUDNews(DatabaseSessionService, CRUDNewsBase):
                         os.remove(data.image)
                     await session.delete(data)
                     await session.commit()
-                    return {"message": 200}
+                    return "done"
                 raise DataBaseError(
                     detail="delete_news",
                 )
