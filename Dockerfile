@@ -6,9 +6,9 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN mkdir -p /src/images && \
-    chmod -R 775 /src/images && \
-    chown -R 1000:1000 /src/images
+RUN mkdir -p /admin/images && \
+    chmod -R 775 /admin/images && \
+    chown -R 1000:1000 /admin/images
 
 COPY . .
 
