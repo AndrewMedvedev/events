@@ -38,12 +38,11 @@ async def valid_answer(
 
 
 async def add_image(
-    self,
     image: UploadFile,
 ) -> dict:
     if image is not None:
-        file_ext = os.path.splitext(image.filename)[1]  # получаем расширение файла
-        file_path = os.path.join(self.IMAGE_FOLDER, f"{uuid4()}{file_ext}")
+        file_ext = os.path.splitext(image.filename)[1]
+        file_path = os.path.join("images", f"{uuid4()}{file_ext}")
         with open(file_path, "wb") as buffer:
             buffer.write(await image.read())
         return file_path
