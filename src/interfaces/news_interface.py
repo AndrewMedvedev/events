@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 class NewsBase(ABC):
 
     @abstractmethod
-    async def create_news():
+    async def add_news():
         raise NotImplementedError
     
     @abstractmethod

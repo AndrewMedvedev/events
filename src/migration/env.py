@@ -10,8 +10,8 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
 
-from src.database.models import Event, Visitor, PointsEvent, New
 from src.database.database import DATABASE_URL, Base
+from src.database.models import Event, New, PointsEvent, Visitor
 
 config = context.config
 config.set_main_option("sqlalchemy.url", DATABASE_URL)

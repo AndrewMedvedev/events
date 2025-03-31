@@ -1,6 +1,10 @@
 __all__ = (
-    "CRUD",
+    "CRUDEvents",
+    "CRUDNews",
+    "CRUDVisitors",
 )
 
 
-from src.database.services.crud import CRUD
+from .crud_events import CRUDEvents
+from .crud_news import CRUDNews
+from .crud_visitors import CRUDVisitors

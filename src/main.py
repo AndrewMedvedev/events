@@ -1,22 +1,15 @@
 import logging
 
-from fastapi import FastAPI, Request, status
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 
 from src.database import config_logging
-from src.errors import DataBaseError, SendError
-from src.routers import router_event, router_visitors, router_news
+from src.errors import DataBaseError, SendError, db_error, send_error
+from src.routers import router_event, router_news, router_visitors
 
 config_logging(level=logging.INFO)
 
 app = FastAPI(title="Админ панель личного аккаунта")
-
-app.include_router(router_event)
-
-app.include_router(router_news)
-
-app.include_router(router_visitors)
 
 origins = [
     "http://localhost:3000",
@@ -36,24 +29,12 @@ app.add_middleware(
     expose_headers=["*"],
 )
 
+app.add_exception_handler(DataBaseError, db_error)
 
-@app.exception_handler(DataBaseError)
-async def db_error(
-    request: Request,
-    exc: DataBaseError,
-) -> JSONResponse:
-    return JSONResponse(
-        status_code=status.HTTP_400_BAD_REQUEST,
-        content={"message": str(exc)},
-    )
+app.add_exception_handler(SendError, send_error)
 
+app.include_router(router_event)
 
-@app.exception_handler(SendError)
-async def send_error(
-    request: Request,
-    exc: SendError,
-) -> JSONResponse:
-    return JSONResponse(
-        status_code=status.HTTP_400_BAD_REQUEST,
-        content={"message": str(exc)},
-    )
+app.include_router(router_news)
+
+app.include_router(router_visitors)

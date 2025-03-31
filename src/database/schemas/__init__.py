@@ -1,8 +1,10 @@
 __all__ = (
     "EventModel",
     "EventModelUpdate",
-    "NewsModel",
+    "EventListResponse",
+    "NewsListResponse",
 )
 
+from .events_responses import EventListResponse
 from .events_schemas import EventModel, EventModelUpdate
-from .news_schemas import NewsModel
+from .news_responses import NewsListResponse

@@ -5,5 +5,5 @@ __all__ = (
 )
 
 from .events_class import Events
-from .visitors_class import Visitors
 from .news_class import News
+from .visitors_class import Visitors

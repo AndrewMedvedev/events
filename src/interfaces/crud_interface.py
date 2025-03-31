@@ -12,10 +12,6 @@ class CRUDEventBase(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def update_event():
-        raise NotImplementedError
-
-    @abstractmethod
     async def delete_event():
         raise NotImplementedError
 
@@ -42,11 +38,11 @@ class CRUDVisitorBase(ABC):
 class CRUDNewsBase(ABC):
 
     @abstractmethod
-    async def create_news():
+    async def add_news():
         raise NotImplementedError
-    
+
     @abstractmethod
-    async def get_news():
+    async def read_news():
         raise NotImplementedError
 
     @abstractmethod

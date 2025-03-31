@@ -1,12 +1,14 @@
 import logging
 import uuid
 
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi import status
+from fastapi.responses import HTMLResponse
 
 from src.database import get_user_data
 from src.database.models import Visitor
-from src.database.services.crud import CRUD
+from src.database.services import CRUDVisitors
 from src.interfaces import VisitorBase
+from src.responses import CustomResponse
 
 log = logging.getLogger(__name__)
 
@@ -14,17 +16,19 @@ log = logging.getLogger(__name__)
 class Visitors(VisitorBase):
 
     def __init__(self) -> None:
-        self.crud = CRUD()
+        self.crud = CRUDVisitors()
         self.visitor = Visitor
 
     async def add_user(
         self,
         user_id: int,
         event_id: int,
-    ) -> JSONResponse:
-        data = (await get_user_data(
-            user_id,
-        )).get("body")
+    ) -> CustomResponse:
+        data = (
+            await get_user_data(
+                user_id,
+            )
+        ).get("body")
         user_model_visitor = self.visitor(
             user_id=user_id,
             first_name=data.get("first_name"),
@@ -33,34 +37,41 @@ class Visitors(VisitorBase):
             event_id=event_id,
             unique_string=f"{str(uuid.uuid4())}{str(uuid.uuid4())}",
         )
-        return JSONResponse(content=await self.crud.create_visitor(user_model_visitor))
+        return CustomResponse(
+            status_code=status.HTTP_201_CREATED,
+            body=await self.crud.create_visitor(user_model_visitor),
+        )
 
     async def get_user_events(
         self,
         user_id: int,
-    ) -> list[dict]:
+    ) -> CustomResponse:
         events = await self.crud.get_visitors_events(
             user_id=user_id,
         )
-        return [
-            {
-                "event_id": i.event_id,
-                "unique_string": i.unique_string,
-            }
-            for i in events
-        ]
+        return CustomResponse(
+            status_code=status.HTTP_200_OK,
+            body=[
+                {
+                    "event_id": i.event_id,
+                    "unique_string": i.unique_string,
+                }
+                for i in events
+            ],
+        )
 
     async def delete_user(
         self,
         user_id: int,
         event_id: int,
-    ) -> JSONResponse:
+    ) -> CustomResponse:
         delete = await self.crud.delete_visitor(
             user_id=user_id,
             event_id=event_id,
         )
-        return JSONResponse(
-            content=delete,
+        return CustomResponse(
+            status_code=status.status.HTTP_204_NO_CONTENT,
+            body=delete,
         )
 
     async def verify(

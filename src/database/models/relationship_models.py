@@ -27,8 +27,12 @@ class Event(Base):
     def __str__(self):
         return (
             f"{self.__class__.__name__}(id={self.id}, "
-            f"first_name={self.first_name!r},"
-            f"last_name={self.last_name!r})"
+            f"name_event={self.name_event!r},"
+            f"date_time={self.date_time!r}),"
+            f"location={self.location!r}),"
+            f"description={self.description!r}),"
+            f"limit_people={self.limit_people!r}),"
+            f"points_for_the_event={self.points_for_the_event!r}),"
         )
 
     def __repr__(self):

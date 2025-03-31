@@ -1,23 +1,18 @@
 class DataBaseError(Exception):
 
-    def __init__(
-        self,
-        name: str,
-        message: str,
-    ) -> None:
-        self.name = name
-        self.message = message
-        super().__init__(self.name)
+    def __init__(self, detail: str) -> None:
+        self.detail = detail
+        super().__init__(self.detail)
 
     def __str__(self) -> str:
-        return f"{self.name}, {self.message}"
+        return self.detail
 
 
 class SendError(Exception):
 
-    def __init__(self, name: str) -> None:
-        self.name = name
-        super().__init__(self.name)
+    def __init__(self, detail: str) -> None:
+        self.detail = detail
+        super().__init__(self.detail)
 
     def __str__(self) -> str:
-        return f"Ошибка в методе {self.name}. Пришли неверные данные"
+        return self.detail

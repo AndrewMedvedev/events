@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from fastapi.responses import HTMLResponse, JSONResponse
 
 from src.classes import Visitors
+from src.responses import CustomResponse
 
 router_visitors = APIRouter(prefix="/api/v1/visitors", tags=["visitors"])
 
@@ -10,7 +11,7 @@ router_visitors = APIRouter(prefix="/api/v1/visitors", tags=["visitors"])
 async def add(
     event_id: int,
     user_id: int,
-) -> JSONResponse:
+) -> CustomResponse:
     return await Visitors().add_user(
         user_id=user_id,
         event_id=event_id,
@@ -18,7 +19,7 @@ async def add(
 
 
 @router_visitors.get("/get/{user_id}")
-async def get(user_id: int) -> JSONResponse:
+async def get(user_id: int) -> CustomResponse:
     return await Visitors().get_user_events(user_id=user_id)
 
 
@@ -26,7 +27,7 @@ async def get(user_id: int) -> JSONResponse:
 async def delete(
     event_id: int,
     user_id: int,
-) -> JSONResponse:
+) -> CustomResponse:
     return await Visitors().delete_user(
         user_id=user_id,
         event_id=event_id,
