@@ -4,12 +4,15 @@ from typing import Any
 from uuid import uuid4
 
 import aiohttp
-from fastapi import UploadFile
+from fastapi import Path, UploadFile
 
 from src.config import Settings
 from src.errors.errors import SendError
 
 log = logging.getLogger(__name__)
+
+BASE_DIR = Path(__file__).parent.parent
+UPLOAD_DIR = BASE_DIR / "images"
 
 
 async def get_user_data(user_id: int) -> dict:
@@ -41,8 +44,7 @@ async def add_image(
     image: UploadFile,
 ) -> dict:
     if image is not None:
-        file_ext = os.path.splitext(image.filename)[1]
-        file_path = os.path.join("images", f"{uuid4()}{file_ext}")
+        file_path = UPLOAD_DIR / f"{uuid4()}.{image.filename.split('.')[-1]}"
         with open(file_path, "wb") as buffer:
             buffer.write(await image.read())
         return file_path
