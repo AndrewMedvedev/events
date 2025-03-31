@@ -6,6 +6,12 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
+RUN chmod -R 775 /src/images && \
+    chown -R 1000:1000 /src/images
+
+
+VOLUME /src/images
+
 COPY . .
 
 EXPOSE 8080
