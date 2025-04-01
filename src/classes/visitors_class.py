@@ -70,7 +70,7 @@ class Visitors(VisitorBase):
             event_id=event_id,
         )
         return CustomResponse(
-            status_code=status.status.HTTP_204_NO_CONTENT,
+            status_code=status.HTTP_204_NO_CONTENT,
             body=delete,
         )
 
