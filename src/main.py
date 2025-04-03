@@ -2,7 +2,7 @@ import logging
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
+
 
 from src.database import config_logging
 from src.errors import DataBaseError, SendError, db_error, send_error
@@ -11,8 +11,6 @@ from src.routers import router_event, router_news, router_visitors
 config_logging(level=logging.INFO)
 
 app = FastAPI(title="Админ панель личного аккаунта")
-
-app.mount("/images", StaticFiles(directory="images"), name="images")
 
 origins = [
     "http://localhost:3000",
