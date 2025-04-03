@@ -1,11 +1,7 @@
 import logging
-import os
 from typing import Any
-from uuid import uuid4
 
 import aiohttp
-from fastapi import UploadFile
-from pathlib import Path
 
 from src.config import Settings
 from src.errors.errors import SendError
@@ -40,17 +36,6 @@ async def valid_answer(
     except Exception:
         raise SendError(name_func)
 
-
-async def add_image(
-    image: UploadFile,
-) -> dict:
-    if image is not None:
-        file_ext = os.path.splitext(image.filename)[1]
-        file_path = os.path.join("images", f"{uuid4()}{file_ext}")
-        with open(file_path, "wb") as buffer:
-            buffer.write(await image.read())
-        return file_path
-    return "absent"
 
 
 def config_logging(level=logging.INFO):

@@ -5,11 +5,11 @@ __all__ = (
     "EventBase",
     "VisitorBase",
     "NewsBase",
+    "ImagesBase",
 )
 
-from src.interfaces.crud_interface import (CRUDEventBase, CRUDNewsBase,
-                                           CRUDVisitorBase)
-from src.interfaces.event_interface import EventBase
-from src.interfaces.visitor_interface import VisitorBase
-
+from .crud_interface import CRUDEventBase, CRUDNewsBase, CRUDVisitorBase
+from .event_interface import EventBase
+from .images_interface import ImagesBase
 from .news_interface import NewsBase
+from .visitor_interface import VisitorBase

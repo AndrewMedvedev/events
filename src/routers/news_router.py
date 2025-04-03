@@ -1,5 +1,4 @@
 from fastapi import APIRouter, UploadFile
-from fastapi.responses import FileResponse
 
 from src.classes import News
 from src.responses import CustomResponse
@@ -9,12 +8,12 @@ router_news = APIRouter(prefix="/api/v1/news", tags=["news"])
 
 @router_news.post("/add/")
 async def add(
-    head: str,
+    title: str,
     body: str,
     image: UploadFile = None,
 ) -> CustomResponse:
     return await News().add_news(
-        head=head,
+        title=title,
         body=body,
         image=image,
     )
@@ -33,11 +32,6 @@ async def get(
     )
 
 
-@router_news.get("/get/image/{image_name}")
-async def get_image(image_name: str) -> FileResponse:
-    return await News().get_image(
-        image_name=image_name,
-    )
 
 
 @router_news.delete("/delete/{news_id}")

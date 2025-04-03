@@ -2,7 +2,7 @@ services:
 
   postgesql:
     image: postgres:latest
-    container_name: postgres
+    container_name: postgres_events
     ports:
       - "5432:5432"
     restart: always

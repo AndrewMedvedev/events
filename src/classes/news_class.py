@@ -1,13 +1,13 @@
-import os
+
 
 from fastapi import UploadFile, status
-from fastapi.responses import FileResponse
 
-from src.database.controls import add_image
 from src.database.models import New
 from src.database.services import CRUDNews
 from src.interfaces import NewsBase
 from src.responses import CustomResponse
+
+from .images_class import Images
 
 
 class News(NewsBase):
@@ -16,17 +16,18 @@ class News(NewsBase):
 
     def __init__(self) -> None:
         self.crud = CRUDNews()
+        self.img = Images()
 
     async def add_news(
         self,
-        head: str,
+        title: str,
         body: str,
         image: UploadFile,
     ) -> CustomResponse:
         data = New(
-            head=head,
+            title=title,
             body=body,
-            image=await add_image(image=image),
+            image=await self.img.add_image(image=image),
         )
         return CustomResponse(
             status_code=status.HTTP_201_CREATED,
@@ -40,23 +41,24 @@ class News(NewsBase):
         limit: int,
     ) -> CustomResponse:
         if is_paginated:
+            all_news = await self.crud.read_news_with_limit(
+                page=page,
+                limit=limit,
+            )
+            lst_news = {"news": []}
+            for i in (all_news.model_dump()).get("news"):
+                img_base64 = await self.img.get_image(path=i.get("image"))
+                del i["image"]
+                i["image"] = img_base64
+                lst_news["news"].append(i)
             return CustomResponse(
                 status_code=status.HTTP_200_OK,
-                body=await self.crud.read_news_with_limit(
-                    page=page,
-                    limit=limit,
-                ),
+                body=lst_news,
             )
         return CustomResponse(
             status_code=status.HTTP_200_OK,
             body=await self.crud.read_news(),
         )
-
-    async def get_image(
-        self,
-        image_name: str,
-    ) -> FileResponse:
-        return FileResponse(os.path.join(image_name))
 
     async def delete_news(
         self,

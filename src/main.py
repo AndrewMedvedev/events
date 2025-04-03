@@ -1,8 +1,8 @@
 import logging
 
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from src.database import config_logging
 from src.errors import DataBaseError, SendError, db_error, send_error

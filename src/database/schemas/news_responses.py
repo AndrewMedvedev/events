@@ -7,7 +7,7 @@ from pydantic import BaseModel
 class NewsResponse(BaseModel):
     id: int
     created_at: datetime
-    head: str
+    title: str
     body: str
     image: str
 
