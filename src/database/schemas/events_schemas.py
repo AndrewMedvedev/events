@@ -17,5 +17,3 @@ class EventModelUpdate(BaseModel):
     location: str | None
     description: str | None
     limit_people: int | None
-
-

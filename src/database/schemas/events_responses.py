@@ -9,8 +9,8 @@ class EventResponse(BaseModel):
     name_event: str
     date_time: datetime
     description: str
-    limit_people: int
-    points_for_the_event: int
+    limit_people: int | None
+    points_for_the_event: int | None
 
     class Config:
         from_attributes = True

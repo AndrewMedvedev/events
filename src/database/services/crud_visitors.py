@@ -36,8 +36,8 @@ class CRUDVisitors(DatabaseSessionService, CRUDVisitorBase):
                     )
             except Exception:
                 raise DataBaseError(
-                        detail="create_visitor",
-                    )
+                    detail="create_visitor",
+                )
 
     async def get_visitors_events(
         self,
@@ -51,8 +51,9 @@ class CRUDVisitors(DatabaseSessionService, CRUDVisitorBase):
                 return data.scalars().all()
             except Exception:
                 raise DataBaseError(
-                        detail="get_visitors_events",
-                    )
+                    detail="get_visitors_events",
+                )
+
     async def delete_visitor(
         self,
         user_id: int,
@@ -71,12 +72,13 @@ class CRUDVisitors(DatabaseSessionService, CRUDVisitorBase):
                     await session.commit()
                     return "done"
                 raise DataBaseError(
-                        detail="delete_visitor",
-                    )
+                    detail="delete_visitor",
+                )
             except Exception:
                 raise DataBaseError(
-                        detail="delete_visitor",
-                    )
+                    detail="delete_visitor",
+                )
+
     async def verify_visitor(self, unique_string: str) -> str:
         async with self.session() as session:
             try:

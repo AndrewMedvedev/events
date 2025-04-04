@@ -15,6 +15,12 @@ class Settings:
 
     GET_DATA: str = config["GET_DATA"]
 
+    POSTGRES_HOST: str = config["POSTGRES_HOST"]
+    POSTGRES_PORT: str = config["POSTGRES_PORT"]
+    POSTGRES_PASSWORD: str = config["POSTGRES_PASSWORD"]
+    POSTGRES_USER: str = config["POSTGRES_USER"]
+    POSTGRES_DB: str = config["POSTGRES_DB"]
+
 
 settings = Settings()
 
@@ -24,3 +30,10 @@ def get_db_url() -> str:
         f"postgresql+asyncpg://{settings.DB_USER}:{settings.DB_PASSWORD}@"
         f"{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}"
     )
+
+
+# def get_db_url() -> str:
+#     return (
+#         f"postgresql+asyncpg://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@"
+#         f"{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_DB}"
+#     )

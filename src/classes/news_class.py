@@ -1,4 +1,4 @@
-
+import logging
 
 from fastapi import UploadFile, status
 
@@ -8,6 +8,8 @@ from src.interfaces import NewsBase
 from src.responses import CustomResponse
 
 from .images_class import Images
+
+log = logging.getLogger(__name__)
 
 
 class News(NewsBase):
@@ -24,6 +26,7 @@ class News(NewsBase):
         body: str,
         image: UploadFile,
     ) -> CustomResponse:
+        log.info("Вызвана функция add_news")
         data = New(
             title=title,
             body=body,
@@ -40,6 +43,7 @@ class News(NewsBase):
         page: int,
         limit: int,
     ) -> CustomResponse:
+        log.info("Вызвана функция get_news")
         if is_paginated:
             all_news = await self.crud.read_news_with_limit(
                 page=page,
@@ -64,6 +68,7 @@ class News(NewsBase):
         self,
         news_id: int,
     ) -> CustomResponse:
+        log.info("Вызвана функция delete_news")
         return CustomResponse(
             status_code=status.HTTP_204_NO_CONTENT,
             body=await self.crud.delete_news(news_id=news_id),

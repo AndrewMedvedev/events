@@ -1,0 +1,49 @@
+name: Events
+
+on:
+    push:
+      branches: ["main"]
+    pull_request:
+      branches: ["main"]
+
+jobs:
+    build:
+      runs-on: ubuntu-latest
+
+      env:
+        
+        DB_VARS: >
+          POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}
+          POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
+          POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+
+        API_VARS: >
+          GET_DATA=${{ secrets.GET_DATA }}
+
+      steps:
+        - 
+          name: Check repo
+          uses: actions/checkout@v4
+
+        - 
+          name: Create .env file
+          run: |
+            echo "$DB_VARS" >> .env
+            echo "$API_VARS" >> .env
+
+        - 
+          name: Login in to Docker Hub
+          uses: docker/login-action@v3
+          with:
+            username: ${{ secrets.DOCKER_LOGIN}}
+            password: ${{ secrets.DOCKER_PASSWORD }}
+
+        - 
+          name: Build and push
+          uses: docker/build-push-action@v6
+          with:
+            context: .
+            push: true
+            tags: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO_NAME }}:latest

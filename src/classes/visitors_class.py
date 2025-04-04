@@ -24,6 +24,7 @@ class Visitors(VisitorBase):
         user_id: int,
         event_id: int,
     ) -> CustomResponse:
+        log.info("Вызвана функция add_user")
         data = (
             await get_user_data(
                 user_id,
@@ -46,6 +47,7 @@ class Visitors(VisitorBase):
         self,
         user_id: int,
     ) -> CustomResponse:
+        log.info("Вызвана функция get_user_events")
         events = await self.crud.get_visitors_events(
             user_id=user_id,
         )
@@ -65,6 +67,7 @@ class Visitors(VisitorBase):
         user_id: int,
         event_id: int,
     ) -> CustomResponse:
+        log.info("Вызвана функция delete_user")
         delete = await self.crud.delete_visitor(
             user_id=user_id,
             event_id=event_id,
@@ -78,6 +81,7 @@ class Visitors(VisitorBase):
         self,
         unique_string: str,
     ) -> HTMLResponse:
+        log.info("Вызвана функция verify")
         verify_unique_string = await self.crud.verify_visitor(
             unique_string=unique_string,
         )

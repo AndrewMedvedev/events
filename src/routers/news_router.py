@@ -32,8 +32,6 @@ async def get(
     )
 
 
-
-
 @router_news.delete("/delete/{news_id}")
 async def delete(
     news_id: int,

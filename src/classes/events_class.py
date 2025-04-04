@@ -21,6 +21,7 @@ class Events(EventBase):
         self,
         model: EventModel,
     ) -> CustomResponse:
+        log.info("Вызвана функция add_event")
         data = self.event(
             name_event=model.name_event,
             date_time=model.date_time,
@@ -40,6 +41,7 @@ class Events(EventBase):
         page: int,
         limit: int,
     ) -> CustomResponse:
+        log.info("Вызвана функция get_events")
         if is_paginated:
             return CustomResponse(
                 status_code=status.HTTP_200_OK,
@@ -57,6 +59,7 @@ class Events(EventBase):
         self,
         model_id: int,
     ) -> CustomResponse:
+        log.info("Вызвана функция delete_event")
         return CustomResponse(
             status_code=status.HTTP_204_NO_CONTENT,
             body=await self.crud.delete_event(model_id=model_id),

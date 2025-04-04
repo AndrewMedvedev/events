@@ -9,9 +9,6 @@ from src.errors.errors import SendError
 log = logging.getLogger(__name__)
 
 
-
-
-
 async def get_user_data(user_id: int) -> dict:
     async with aiohttp.ClientSession() as session:
         async with session.get(
@@ -35,7 +32,6 @@ async def valid_answer(
             raise SendError(name_func)
     except Exception:
         raise SendError(name_func)
-
 
 
 def config_logging(level=logging.INFO):
