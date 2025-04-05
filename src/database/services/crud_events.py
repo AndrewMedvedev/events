@@ -13,7 +13,6 @@ log = logging.getLogger(__name__)
 
 
 class CRUDEvents(DatabaseSessionService, CRUDEventBase):
-
     def __init__(self) -> None:
         super().__init__()
         self.init()

@@ -14,7 +14,6 @@ log = logging.getLogger(__name__)
 
 
 class Visitors(VisitorBase):
-
     def __init__(self) -> None:
         self.crud = CRUDVisitors()
         self.visitor = Visitor
@@ -36,7 +35,7 @@ class Visitors(VisitorBase):
             last_name=data.get("last_name"),
             email=data.get("email"),
             event_id=event_id,
-            unique_string=f"{str(uuid.uuid4())}{str(uuid.uuid4())}",
+            unique_string=f"{uuid.uuid4()!s}{uuid.uuid4()!s}",
         )
         return CustomResponse(
             status_code=status.HTTP_201_CREATED,
@@ -168,8 +167,7 @@ class Visitors(VisitorBase):
 </body>
 </html>"""
             return HTMLResponse(content=html_content)
-        else:
-            html_content = """<!DOCTYPE html>
+        html_content = """<!DOCTYPE html>
             <html lang="ru">
             <head>
                 <meta charset="UTF-8">
@@ -183,4 +181,4 @@ class Visitors(VisitorBase):
                 </div>
             </body>
             </html>"""
-            return HTMLResponse(content=html_content)
+        return HTMLResponse(content=html_content)

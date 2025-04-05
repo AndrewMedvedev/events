@@ -1,8 +1,4 @@
-__all__ = (
-    "Events",
-    "Visitors",
-    "News"
-)
+__all__ = ("Events", "News", "Visitors")
 
 from .events_class import Events
 from .news_class import News

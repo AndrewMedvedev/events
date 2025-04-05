@@ -4,7 +4,6 @@ from fastapi.responses import HTMLResponse, JSONResponse
 
 
 class VisitorBase(ABC):
-
     @abstractmethod
     async def add_user() -> JSONResponse:
         raise NotImplementedError

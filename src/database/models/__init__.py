@@ -1,8 +1,8 @@
 __all__ = (
     "Event",
-    "Visitor",
     "New",
     "PointsEvent",
+    "Visitor",
 )
 
 from .news_model import New

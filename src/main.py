@@ -4,8 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.database import config_logging
-from src.errors import (DataBaseError, ImageAddError, ImageGetError, SendError,
-                        db_error, image_add_error, image_get_error, send_error)
+from src.errors import DataBaseError, ImageAddError, ImageGetError, SendError, db_error, image_add_error, image_get_error, send_error
 from src.routers import router_event, router_news, router_visitors
 
 config_logging(level=logging.INFO)

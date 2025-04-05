@@ -4,7 +4,6 @@ from fastapi.responses import JSONResponse
 
 
 class EventBase(ABC):
-
     @abstractmethod
     async def add_event() -> JSONResponse:
         raise NotImplementedError

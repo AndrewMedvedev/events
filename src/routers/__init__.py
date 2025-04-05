@@ -1,7 +1,7 @@
 __all__ = (
     "router_event",
-    "router_visitors",
     "router_news",
+    "router_visitors",
 )
 
 from .events_routers import router_event

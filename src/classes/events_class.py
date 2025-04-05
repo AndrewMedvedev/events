@@ -12,7 +12,6 @@ log = logging.getLogger(__name__)
 
 
 class Events(EventBase):
-
     def __init__(self) -> None:
         self.crud = CRUDEvents()
         self.event = Event

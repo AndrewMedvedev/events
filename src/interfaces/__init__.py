@@ -1,11 +1,11 @@
 __all__ = (
     "CRUDEventBase",
-    "CRUDVisitorBase",
     "CRUDNewsBase",
+    "CRUDVisitorBase",
     "EventBase",
-    "VisitorBase",
-    "NewsBase",
     "ImagesBase",
+    "NewsBase",
+    "VisitorBase",
 )
 
 from .crud_interface import CRUDEventBase, CRUDNewsBase, CRUDVisitorBase

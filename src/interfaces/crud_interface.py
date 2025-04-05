@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 
 
 class CRUDEventBase(ABC):
-
     @abstractmethod
     async def create_event():
         raise NotImplementedError
@@ -17,7 +16,6 @@ class CRUDEventBase(ABC):
 
 
 class CRUDVisitorBase(ABC):
-
     @abstractmethod
     async def create_visitor():
         raise NotImplementedError
@@ -36,7 +34,6 @@ class CRUDVisitorBase(ABC):
 
 
 class CRUDNewsBase(ABC):
-
     @abstractmethod
     async def add_news():
         raise NotImplementedError

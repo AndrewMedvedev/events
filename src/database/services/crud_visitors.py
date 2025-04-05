@@ -17,23 +17,16 @@ class CRUDVisitors(DatabaseSessionService, CRUDVisitorBase):
     ) -> dict:
         async with self.session() as session:
             try:
-                counts = await session.scalar(
-                    select(Event.limit_people).where(Event.id == model.event_id)
-                )
-                counts_visitors = await session.execute(
-                    select(func.count())
-                    .select_from(Visitor)
-                    .filter(Visitor.event_id == model.event_id)
-                )
+                counts = await session.scalar(select(Event.limit_people).where(Event.id == model.event_id))
+                counts_visitors = await session.execute(select(func.count()).select_from(Visitor).filter(Visitor.event_id == model.event_id))
                 if counts_visitors.scalar() < counts or counts == 0:
                     session.add(model)
                     await session.commit()
                     await session.refresh(model)
                     return "done"
-                else:
-                    raise DataBaseError(
-                        detail="create_visitor",
-                    )
+                raise DataBaseError(
+                    detail="create_visitor",
+                )
             except Exception:
                 raise DataBaseError(
                     detail="create_visitor",
@@ -44,9 +37,7 @@ class CRUDVisitors(DatabaseSessionService, CRUDVisitorBase):
         user_id: int,
     ) -> dict | str:
         async with self.session() as session:
-            data = await session.execute(
-                select(Visitor).filter(Visitor.user_id == user_id)
-            )
+            data = await session.execute(select(Visitor).filter(Visitor.user_id == user_id))
             try:
                 return data.scalars().all()
             except Exception:
@@ -60,11 +51,7 @@ class CRUDVisitors(DatabaseSessionService, CRUDVisitorBase):
         event_id: int,
     ) -> dict:
         async with self.session() as session:
-            obj = await session.execute(
-                select(Visitor).filter(
-                    Visitor.event_id == event_id and Visitor.user_id == user_id
-                )
-            )
+            obj = await session.execute(select(Visitor).filter(Visitor.event_id == event_id and Visitor.user_id == user_id))
 
             try:
                 if obj:
@@ -82,9 +69,7 @@ class CRUDVisitors(DatabaseSessionService, CRUDVisitorBase):
     async def verify_visitor(self, unique_string: str) -> str:
         async with self.session() as session:
             try:
-                obj = await session.execute(
-                    select(Visitor).where(Visitor.unique_string == unique_string)
-                )
+                obj = await session.execute(select(Visitor).where(Visitor.unique_string == unique_string))
                 scalars = obj.scalar()
                 return scalars
             except Exception:

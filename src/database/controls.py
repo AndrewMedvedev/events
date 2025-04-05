@@ -1,5 +1,6 @@
-import logging
 from typing import Any
+
+import logging
 
 import aiohttp
 
@@ -28,8 +29,7 @@ async def valid_answer(
             data_dict = await response.json()
             log.warning(data_dict)
             return data_dict
-        else:
-            raise SendError(name_func)
+        raise SendError(name_func)
     except Exception:
         raise SendError(name_func)
 

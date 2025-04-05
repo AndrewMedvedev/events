@@ -14,7 +14,6 @@ log = logging.getLogger(__name__)
 
 
 class Images(ImagesBase):
-
     FOLDER = "images"
 
     def __init__(self) -> None:
@@ -27,9 +26,7 @@ class Images(ImagesBase):
         log.info("Вызвана функция add_image")
         try:
             if image is not None:
-                file_name = os.path.join(
-                    self.FOLDER, f"{uuid4()}{os.path.splitext(image.filename)[1]}"
-                )
+                file_name = os.path.join(self.FOLDER, f"{uuid4()}{os.path.splitext(image.filename)[1]}")
                 contents = await image.read()
                 img = Image.open(io.BytesIO(contents))
                 img.save(file_name, format="JPEG", optimize=True, quality=90)

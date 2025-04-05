@@ -3,12 +3,10 @@ from datetime import datetime
 from sqlalchemy import DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.database.database import (Base, int_null_true, int_nullable, int_pk,
-                                   str_nullable, str_uniq)
+from src.database.database import Base, int_null_true, int_nullable, int_pk, str_nullable, str_uniq
 
 
 class Event(Base):
-
     __table_args__ = {"extend_existing": True}
 
     id: Mapped[int_pk]
@@ -25,22 +23,13 @@ class Event(Base):
     )
 
     def __str__(self):
-        return (
-            f"{self.__class__.__name__}(id={self.id}, "
-            f"name_event={self.name_event!r},"
-            f"date_time={self.date_time!r}),"
-            f"location={self.location!r}),"
-            f"description={self.description!r}),"
-            f"limit_people={self.limit_people!r}),"
-            f"points_for_the_event={self.points_for_the_event!r}),"
-        )
+        return f"{self.__class__.__name__}(id={self.id}, name_event={self.name_event!r},date_time={self.date_time!r}),location={self.location!r}),description={self.description!r}),limit_people={self.limit_people!r}),points_for_the_event={self.points_for_the_event!r}),"
 
     def __repr__(self):
         return str(self)
 
 
 class Visitor(Base):
-
     id: Mapped[int_pk]
     user_id: Mapped[int_nullable]
     event_id: Mapped[int] = mapped_column(ForeignKey("events.id"))
@@ -59,11 +48,7 @@ class Visitor(Base):
     )
 
     def __str__(self):
-        return (
-            f"{self.__class__.__name__}(id={self.id}, "
-            f"first_name={self.first_name!r},"
-            f"last_name={self.last_name!r})"
-        )
+        return f"{self.__class__.__name__}(id={self.id}, first_name={self.first_name!r},last_name={self.last_name!r})"
 
     def __repr__(self):
         return str(self)

@@ -26,6 +26,7 @@ async def send_error(
         detail="Были введены неверные данные",
     )
 
+
 async def image_add_error(
     request: Request,
     exc: ImageAddError,
@@ -35,6 +36,7 @@ async def image_add_error(
         message=str(exc),
         detail="Неверный формат",
     )
+
 
 async def image_get_error(
     request: Request,

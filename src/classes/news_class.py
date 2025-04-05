@@ -13,7 +13,6 @@ log = logging.getLogger(__name__)
 
 
 class News(NewsBase):
-
     IMAGE_FOLDER = "images"
 
     def __init__(self) -> None:
