@@ -3,6 +3,7 @@ from typing import Any
 import logging
 
 import aiohttp
+from PIL import Image
 
 from src.config import Settings
 from src.errors.errors import SendError
@@ -32,6 +33,15 @@ async def valid_answer(
         raise SendError(name_func)
     except Exception:
         raise SendError(name_func)
+
+
+async def valid_image(path: str) -> bool:
+    try:
+        with Image.open(path) as img:
+            img.verify()
+        return True
+    except (OSError, SyntaxError):
+        return False
 
 
 def config_logging(level=logging.INFO):

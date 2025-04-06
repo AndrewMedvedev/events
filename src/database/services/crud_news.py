@@ -2,6 +2,7 @@ import os
 
 from sqlalchemy import select
 
+from src.database.controls import valid_image
 from src.database.models import New
 from src.database.schemas import NewsListResponse
 from src.database.services.orm import DatabaseSessionService
@@ -59,11 +60,13 @@ class CRUDNews(DatabaseSessionService, CRUDNewsBase):
             try:
                 if obj:
                     data = obj.scalar()
-                    if data.image != "absent":
+                    img = await valid_image(data.image)
+                    if img:
                         os.remove(data.image)
                     await session.delete(data)
                     await session.commit()
                     return "done"
+
                 raise DataBaseError(
                     detail="delete_news",
                 )
