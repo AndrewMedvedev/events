@@ -9,6 +9,7 @@ class EventResponse(BaseModel):
     id: int
     name_event: str
     date_time: datetime
+    location: str
     description: str
     limit_people: int | None
     points_for_the_event: int | None
