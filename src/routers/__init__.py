@@ -1,9 +1,9 @@
-__all__ = (
-    "router_event",
-    "router_news",
-    "router_visitors",
-)
+from .events import events
+from .news import news
+from .visitors import visitors
 
-from .events_routers import router_event
-from .news_router import router_news
-from .visitors_routers import router_visitors
+__all__ = (
+    "events",
+    "news",
+    "visitors"
+)
