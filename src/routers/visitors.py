@@ -3,9 +3,10 @@ from fastapi.requests import Request
 from fastapi.responses import HTMLResponse, JSONResponse, Response
 from fastapi.templating import Jinja2Templates
 
+from ..constants import PATH_ENDPOINT
 from ..controllers import VisitorsControl
 
-visitors = APIRouter(prefix="/api/v1/visitors", tags=["visitors"])
+visitors = APIRouter(prefix=f"{PATH_ENDPOINT}visitors", tags=["visitors"])
 
 
 @visitors.post("/add/{event_id}/{user_id}")

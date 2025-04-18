@@ -3,14 +3,19 @@ from fastapi.datastructures import UploadFile
 from fastapi.param_functions import File, Form
 from fastapi.responses import JSONResponse, Response
 
+from ..constants import PATH_ENDPOINT
 from ..controllers import NewsControl
 from ..schemas import NewsSchema
 
-news = APIRouter(prefix="/api/v1/news", tags=["news"])
+news = APIRouter(prefix=f"{PATH_ENDPOINT}news", tags=["news"])
 
 
 @news.post("/add/")
-async def add(title: str = Form(), body: str = Form(), image: UploadFile | None = File()) -> Response:
+async def add(
+    title: str = Form(),
+    body: str = Form(),
+    image: UploadFile | None = File(default=None),
+) -> Response:
     schema = NewsSchema(title=title, body=body)
     await NewsControl().create_news(schema, image)
     return Response(status_code=status.HTTP_201_CREATED)

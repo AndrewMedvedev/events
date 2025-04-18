@@ -1,18 +1,54 @@
-class DataBaseError(Exception):
-    pass
+from fastapi.exceptions import HTTPException
+
+__all__ = [
+    "HTTPException",
+]
 
 
-class SendError(Exception):
-    pass
+class BaseHTTPError(Exception):
+    def __init__(self, message: str, code: int) -> None:
+        self.code = code if code > 100 else 500
+        self.message = message
+
+    def __str__(self):
+        return f"{self.message} ({self.code})"
 
 
-class ImageAddError(Exception):
-    pass
+class BadRequestHTTPError(BaseHTTPError):
+    def __init__(self, message: str = "Bad Request") -> None:
+        super().__init__(message, 400)
 
 
-class ImageGetError(Exception):
-    pass
+class UnauthorizedHTTPError(BaseHTTPError):
+    def __init__(self, message: str = "Authorization Requied") -> None:
+        super().__init__(message, 401)
 
 
-class UserDataNotFoundError(Exception):
-    pass
+class ForbiddenHTTPError(BaseHTTPError):
+    def __init__(self, message: str = "Forbidden") -> None:
+        super().__init__(message, 403)
+
+
+class NotFoundHTTPError(BaseHTTPError):
+    def __init__(self, message: str = "Not Found") -> None:
+        super().__init__(message, 404)
+
+
+class NotAllowHTTPError(BaseHTTPError):
+    def __init__(self, message: str = "Method Not Allowed") -> None:
+        super().__init__(message, 405)
+
+
+class InternalHTTPError(BaseHTTPError):
+    def __init__(self, message: str = "Internal Server Error") -> None:
+        super().__init__(message, 500)
+
+
+class ExistsHTTPError(BaseHTTPError):
+    def __init__(self, message: str = "Entry already exists") -> None:
+        super().__init__(message, 409)
+
+
+class NoPlacesHTTPError(BaseHTTPError):
+    def __init__(self, message: str = "No places") -> None:
+        super().__init__(message, 403)

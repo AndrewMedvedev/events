@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Response, status
 from fastapi.responses import JSONResponse
 
+from ..constants import PATH_ENDPOINT
 from ..controllers import EventControl
 from ..schemas import EventSchema
 
-events = APIRouter(prefix="/api/v1/events", tags=["events"])
+events = APIRouter(prefix=f"{PATH_ENDPOINT}events", tags=["events"])
 
 
 @events.post("/add/")

@@ -1,18 +1,18 @@
-from ..database.crud import CRUD
+from ..database.crud import SQLEvent
 from ..schemas import EventListResponse, EventSchema
 
 
 class EventControl:
-    @staticmethod
-    async def create_event(schema: EventSchema) -> None:
-        return await CRUD().create_event(schema.to_model())
+    def __init__(self):
+        self.sql_event = SQLEvent()
 
-    @staticmethod
-    async def get_event(is_paginated: bool, page: int, limit: int) -> EventListResponse:
+    async def create_event(self, schema: EventSchema) -> None:
+        return await self.sql_event.create_events(schema.to_model())
+
+    async def get_event(self, is_paginated: bool, page: int, limit: int) -> EventListResponse:
         if not is_paginated:
-            return await CRUD().read_event()
-        return await CRUD().read_events_with_limit(page=page, limit=limit)
+            return await self.sql_event.read_events()
+        return await self.sql_event.read_events_with_limit(page=page, limit=limit)
 
-    @staticmethod
-    async def delete_event(model_id: int) -> None:
-        return await CRUD().delete_event(model_id=model_id)
+    async def delete_event(self, model_id: int) -> None:
+        return await self.sql_event.delete_events(model_id=model_id)

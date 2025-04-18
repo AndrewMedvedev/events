@@ -1,26 +1,32 @@
 import os
 
 from sqlalchemy import func, select
+from sqlalchemy.exc import DataError, IntegrityError
 
-from ..exeptions import DataBaseError
+from ..exeptions import BadRequestHTTPError, ExistsHTTPError, NoPlacesHTTPError
 from ..schemas import EventListResponse, NewsListResponse
 from ..utils import valid_image
 from .models import EventModel, NewsModel, VisitorModel
 from .session import DatabaseSessionService
 
 
-class CRUD(DatabaseSessionService):
+class SQLEvent(DatabaseSessionService):
     def __init__(self) -> None:
         super().__init__()
         self.init()
 
-    async def create_event(self, model: EventModel) -> None:
-        async with self.session() as session:
-            session.add(model)
-            await session.commit()
-            await session.refresh(model)
+    async def create_events(self, model: EventModel) -> None:
+        try:
+            async with self.session() as session:
+                session.add(model)
+                await session.commit()
+                await session.refresh(model)
+        except DataError:
+            raise BadRequestHTTPError()
+        except IntegrityError:
+            raise ExistsHTTPError()
 
-    async def read_event(
+    async def read_events(
         self,
     ) -> EventListResponse:
         async with self.session() as session:
@@ -34,19 +40,30 @@ class CRUD(DatabaseSessionService):
             events = await session.execute(stmt)
         return EventListResponse(events=events.scalars().all())
 
-    async def delete_event(self, model_id: int) -> None:
+    async def delete_events(self, model_id: int) -> None:
         async with self.session() as session:
             obj = await session.get(EventModel, model_id)
             if not obj:
-                raise DataBaseError()
+                raise BadRequestHTTPError()
             await session.delete(obj)
             await session.commit()
 
+
+class SQLNews(DatabaseSessionService):
+    def __init__(self) -> None:
+        super().__init__()
+        self.init()
+
     async def create_news(self, model: NewsModel) -> None:
-        async with self.session() as session:
-            session.add(model)
-            await session.commit()
-            await session.refresh(model)
+        try:
+            async with self.session() as session:
+                session.add(model)
+                await session.commit()
+                await session.refresh(model)
+        except DataError:
+            raise BadRequestHTTPError()
+        except IntegrityError:
+            raise ExistsHTTPError()
 
     async def read_news(
         self,
@@ -66,7 +83,7 @@ class CRUD(DatabaseSessionService):
         async with self.session() as session:
             obj = await session.execute(select(NewsModel).filter(NewsModel.id == news_id))
             if not obj:
-                raise DataBaseError()
+                raise BadRequestHTTPError()
             data = obj.scalar()
             img = await valid_image(data.image)
             if img:
@@ -74,33 +91,44 @@ class CRUD(DatabaseSessionService):
             await session.delete(data)
             await session.commit()
 
-    async def create_visitor(self, model: VisitorModel) -> None:
-        async with self.session() as session:
-            counts = await session.scalar(select(EventModel.limit_people).where(EventModel.id == model.event_id))
-            counts_visitors = await session.execute(select(func.count()).select_from(VisitorModel).filter(VisitorModel.event_id == model.event_id))
 
-            if counts_visitors.scalar() < counts:
-                raise DataBaseError()
+class SQLVisitor(DatabaseSessionService):
+    def __init__(self) -> None:
+        super().__init__()
+        self.init()
 
-            session.add(model)
-            await session.commit()
-            await session.refresh(model)
+    async def create_visitors(self, model: VisitorModel) -> None:
+        try:
+            async with self.session() as session:
+                counts = await session.scalar(select(EventModel.limit_people).where(EventModel.id == model.event_id))
+                counts_visitors = await session.execute(select(func.count()).select_from(VisitorModel).filter(VisitorModel.event_id == model.event_id))
+
+                if counts_visitors.scalar() < counts or counts == 0:
+                    session.add(model)
+                    await session.commit()
+                    await session.refresh(model)
+                else:
+                    raise NoPlacesHTTPError()
+        except DataError:
+            raise BadRequestHTTPError()
+        except IntegrityError:
+            raise ExistsHTTPError()
 
     async def get_visitors_events(self, user_id: int) -> list:
         async with self.session() as session:
             return (await session.execute(select(VisitorModel).filter(VisitorModel.user_id == user_id))).scalars().all()
 
-    async def delete_visitor(self, user_id: int, event_id: int) -> None:
+    async def delete_visitors(self, user_id: int, event_id: int) -> None:
         async with self.session() as session:
             obj = await session.execute(select(VisitorModel).filter(VisitorModel.event_id == event_id and VisitorModel.user_id == user_id))
 
             if not obj:
-                raise DataBaseError()
+                raise BadRequestHTTPError()
 
             await session.delete(obj.scalar())
             await session.commit()
 
-    async def verify_visitor(self, unique_string: str) -> VisitorModel:
+    async def verify_visitors(self, unique_string: str) -> VisitorModel:
         async with self.session() as session:
             obj = await session.execute(select(VisitorModel).where(VisitorModel.unique_string == unique_string))
             scalars = obj.scalar()

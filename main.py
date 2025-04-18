@@ -1,9 +1,46 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+import typing as t
 
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+
+from src.exeptions import (
+    BadRequestHTTPError,
+    BaseHTTPError,
+    HTTPException,
+    InternalHTTPError,
+)
 from src.routers import events, news, visitors
+from src.structures import JSONError
 
 app = FastAPI(title="Admin Panel")
+
+
+@app.exception_handler(Exception)
+async def handler(
+    request: Request,
+    exception: t.Union[
+        Exception,
+        BaseException,
+    ],
+    description: str = None,
+) -> JSONResponse:
+    if isinstance(exception, HTTPException):
+        exception = BaseHTTPError(str(exception), exception.status_code)
+    if isinstance(exception, BaseHTTPError):
+        pass
+    elif isinstance(exception, (AttributeError, ValueError, KeyError, TypeError)):
+        description = description if description is not None else str(exception)
+        exception = BadRequestHTTPError()
+
+    else:
+        exception = InternalHTTPError()
+
+    return JSONResponse(
+        content=JSONError.create(exception, description).to_dict(),
+        status_code=exception.code,
+    )
+
 
 origins: list[str] = [
     "http://localhost:3000",

@@ -1,24 +1,49 @@
 from typing import Any
 
-from PIL import Image
+import base64
+import io
+import os
+import uuid
 
-from .exeptions import SendError
+from fastapi import UploadFile
+from PIL import Image as I
+
+from .constants import FOLDER
+from .exeptions import NotFoundHTTPError
 
 
-async def valid_answer(response: Any, name_func: str) -> dict:
+async def valid_answer(response: Any) -> dict:
     try:
         if response.status != 200:
-            raise SendError(name_func)
-        data_dict = await response.json()
-        return data_dict
+            raise NotFoundHTTPError()
+        return await response.json()
     except Exception:
-        raise SendError(name_func)
+        raise NotFoundHTTPError()
 
 
 async def valid_image(path: str) -> bool:
     try:
-        with Image.open(path) as img:
+        with I.open(path) as img:
             img.verify()
         return True
-    except (OSError, SyntaxError):
+    except (OSError, SyntaxError, AttributeError):
         return False
+
+
+class Image:
+    @staticmethod
+    async def add_images(image: UploadFile) -> str:
+        file_name = os.path.join(FOLDER, f"{uuid.uuid4()}{os.path.splitext(image.filename)[1]}")
+        contents = await image.read()
+        img = I.open(io.BytesIO(contents))
+        img.save(file_name, format="JPEG", optimize=True, quality=90)
+        return file_name
+
+    @staticmethod
+    async def get_images(path: str):
+        if path != "absent":
+            with open(path, "rb") as file:
+                img_bytes = file.read()
+                return base64.b64encode(img_bytes).decode("ascii")
+        else:
+            return "absent"

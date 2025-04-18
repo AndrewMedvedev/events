@@ -3,7 +3,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from .database.models import EventModel, NewsModel, VisitorModel
 
@@ -17,11 +17,16 @@ class EventResponse(BaseModel):
     limit_people: int | None
     points_for_the_event: int | None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
     def to_dict(self) -> dict:
-        result = {"id": self.id, "name_event": self.name_event, "date_time": self.date_time.isoformat(), "location": self.location, "description": self.description}
+        result = {
+            "id": self.id,
+            "name_event": self.name_event,
+            "date_time": self.date_time.isoformat(),
+            "location": self.location,
+            "description": self.description,
+        }
         if self.limit_people is not None:
             result["limit_people"] = self.limit_people
         if self.points_for_the_event is not None:
@@ -56,25 +61,23 @@ class EventSchema(BaseModel):
         )
 
 
-class EventSchemaUpdate(BaseModel):
-    date_time: datetime | None
-    location: str | None
-    description: str | None
-    limit_people: int | None
-
-
 class NewsResponse(BaseModel):
     id: int
     title: str
     body: str
-    image: str
+    image: str | None
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
     def to_dict(self) -> dict:
-        return {"id": self.id, "title": self.title, "body": self.body, "image": self.image, "created_at": self.created_at.isoformat()}
+        return {
+            "id": self.id,
+            "title": self.title,
+            "body": self.body,
+            "image": self.image,
+            "created_at": self.created_at.isoformat(),
+        }
 
 
 class NewsListResponse(BaseModel):
