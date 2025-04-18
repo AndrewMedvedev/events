@@ -2,13 +2,13 @@ from fastapi import UploadFile
 
 from ..database.crud import SQLNews
 from ..schemas import NewsListResponse, NewsSchema
-from ..utils import Image
+from ..utils import Images
 
 
 class NewsControl:
     def __init__(self) -> None:
         self.sql_news = SQLNews()
-        self.img = Image()
+        self.img = Images()
 
     async def create_news(self, schema: NewsSchema, image: UploadFile | None) -> None:
         img = None

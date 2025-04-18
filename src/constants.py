@@ -1,2 +1,4 @@
 FOLDER = "images"
 PATH_ENDPOINT = "/api/v1/"
+MIN = 100
+STATUS_OK = 200

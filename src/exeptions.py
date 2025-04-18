@@ -1,4 +1,10 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+
 from fastapi.exceptions import HTTPException
+
+from .constants import MIN
 
 __all__ = [
     "HTTPException",
@@ -7,7 +13,7 @@ __all__ = [
 
 class BaseHTTPError(Exception):
     def __init__(self, message: str, code: int) -> None:
-        self.code = code if code > 100 else 500
+        self.code = code if code > MIN else 500
         self.message = message
 
     def __str__(self):
@@ -52,3 +58,25 @@ class ExistsHTTPError(BaseHTTPError):
 class NoPlacesHTTPError(BaseHTTPError):
     def __init__(self, message: str = "No places") -> None:
         super().__init__(message, 403)
+
+
+@dataclass
+class JSONError:
+    message: str
+    description: str
+    error: Exception
+
+    @classmethod
+    def create(cls, exception: Exception, description: str | None = None) -> JSONError:
+        return cls(
+            message=getattr(exception, "message", str(exception)),
+            description=description if isinstance(description, str) else "",
+            error=exception,
+        )
+
+    def to_dict(self):
+        return {
+            "message": self.message,
+            "description": self.description,
+            "error": f"{type(self.error)} - {self.error}",
+        }

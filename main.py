@@ -1,6 +1,6 @@
 import typing as t
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
@@ -9,21 +9,21 @@ from src.exeptions import (
     BaseHTTPError,
     HTTPException,
     InternalHTTPError,
+    JSONError,
 )
 from src.routers import events, news, visitors
-from src.structures import JSONError
 
 app = FastAPI(title="Admin Panel")
 
 
 @app.exception_handler(Exception)
-async def handler(
-    request: Request,
+def handler(
+    _request: Request,
     exception: t.Union[
         Exception,
         BaseException,
     ],
-    description: str = None,
+    description: t.Optional[str] = None,
 ) -> JSONResponse:
     if isinstance(exception, HTTPException):
         exception = BaseHTTPError(str(exception), exception.status_code)

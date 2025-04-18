@@ -22,9 +22,9 @@ class SQLEvent(DatabaseSessionService):
                 await session.commit()
                 await session.refresh(model)
         except DataError:
-            raise BadRequestHTTPError()
+            raise BadRequestHTTPError from None
         except IntegrityError:
-            raise ExistsHTTPError()
+            raise ExistsHTTPError from None
 
     async def read_events(
         self,
@@ -33,7 +33,9 @@ class SQLEvent(DatabaseSessionService):
             events = await session.execute(select(EventModel))
         return EventListResponse(events=events.scalars().all())
 
-    async def read_events_with_limit(self, page: int = 1, limit: int = 5) -> EventListResponse:
+    async def read_events_with_limit(
+        self, page: int = 1, limit: int = 5
+    ) -> EventListResponse:
         offset = (page - 1) * limit
         async with self.session() as session:
             stmt = select(EventModel).offset(offset).limit(limit)
@@ -44,7 +46,7 @@ class SQLEvent(DatabaseSessionService):
         async with self.session() as session:
             obj = await session.get(EventModel, model_id)
             if not obj:
-                raise BadRequestHTTPError()
+                raise BadRequestHTTPError
             await session.delete(obj)
             await session.commit()
 
@@ -61,9 +63,9 @@ class SQLNews(DatabaseSessionService):
                 await session.commit()
                 await session.refresh(model)
         except DataError:
-            raise BadRequestHTTPError()
+            raise BadRequestHTTPError from None
         except IntegrityError:
-            raise ExistsHTTPError()
+            raise ExistsHTTPError from None
 
     async def read_news(
         self,
@@ -72,7 +74,9 @@ class SQLNews(DatabaseSessionService):
             news = await session.execute(select(NewsModel))
         return NewsListResponse(news=news.scalars().all())
 
-    async def read_news_with_limit(self, page: int = 1, limit: int = 5) -> NewsListResponse:
+    async def read_news_with_limit(
+        self, page: int = 1, limit: int = 5
+    ) -> NewsListResponse:
         offset = (page - 1) * limit
         async with self.session() as session:
             stmt = select(NewsModel).offset(offset).limit(limit)
@@ -81,9 +85,11 @@ class SQLNews(DatabaseSessionService):
 
     async def delete_news(self, news_id: int) -> None:
         async with self.session() as session:
-            obj = await session.execute(select(NewsModel).filter(NewsModel.id == news_id))
+            obj = await session.execute(
+                select(NewsModel).filter(NewsModel.id == news_id)
+            )
             if not obj:
-                raise BadRequestHTTPError()
+                raise BadRequestHTTPError
             data = obj.scalar()
             img = await valid_image(data.image)
             if img:
@@ -100,36 +106,58 @@ class SQLVisitor(DatabaseSessionService):
     async def create_visitors(self, model: VisitorModel) -> None:
         try:
             async with self.session() as session:
-                counts = await session.scalar(select(EventModel.limit_people).where(EventModel.id == model.event_id))
-                counts_visitors = await session.execute(select(func.count()).select_from(VisitorModel).filter(VisitorModel.event_id == model.event_id))
+                counts = await session.scalar(
+                    select(EventModel.limit_people).where(
+                        EventModel.id == model.event_id
+                    )
+                )
+                counts_visitors = await session.execute(
+                    select(func.count())
+                    .select_from(VisitorModel)
+                    .filter(VisitorModel.event_id == model.event_id)
+                )
 
                 if counts_visitors.scalar() < counts or counts == 0:
                     session.add(model)
                     await session.commit()
                     await session.refresh(model)
                 else:
-                    raise NoPlacesHTTPError()
+                    raise NoPlacesHTTPError
         except DataError:
-            raise BadRequestHTTPError()
+            raise BadRequestHTTPError from None
         except IntegrityError:
-            raise ExistsHTTPError()
+            raise ExistsHTTPError from None
 
     async def get_visitors_events(self, user_id: int) -> list:
         async with self.session() as session:
-            return (await session.execute(select(VisitorModel).filter(VisitorModel.user_id == user_id))).scalars().all()
+            return (
+                (
+                    await session.execute(
+                        select(VisitorModel).filter(VisitorModel.user_id == user_id)
+                    )
+                )
+                .scalars()
+                .all()
+            )
 
     async def delete_visitors(self, user_id: int, event_id: int) -> None:
         async with self.session() as session:
-            obj = await session.execute(select(VisitorModel).filter(VisitorModel.event_id == event_id and VisitorModel.user_id == user_id))
+            obj = await session.execute(
+                select(VisitorModel).filter(
+                    VisitorModel.event_id == event_id
+                    and VisitorModel.user_id == user_id
+                )
+            )
 
             if not obj:
-                raise BadRequestHTTPError()
+                raise BadRequestHTTPError
 
             await session.delete(obj.scalar())
             await session.commit()
 
     async def verify_visitors(self, unique_string: str) -> VisitorModel:
         async with self.session() as session:
-            obj = await session.execute(select(VisitorModel).where(VisitorModel.unique_string == unique_string))
-            scalars = obj.scalar()
-        return scalars
+            obj = await session.execute(
+                select(VisitorModel).where(VisitorModel.unique_string == unique_string)
+            )
+        return obj.scalar()

@@ -19,16 +19,3 @@ POSTGRES_DB: str = config["POSTGRES_DB"]
 
 def get_db_url() -> str:
     return f"postgresql+asyncpg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-
-
-# def get_db_url() -> str:
-#     return (
-#         f"postgresql+asyncpg://{DB_USER}:{DB_PASSWORD}@"
-#         f"{DB_HOST}:{DB_PORT}/{DB_NAME}"
-#     )
-
-# def get_db_url() -> str:
-#     return (
-#         f"postgresql+asyncpg://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@"
-#         f"{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_DB}"
-#     )

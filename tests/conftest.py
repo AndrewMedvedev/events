@@ -2,18 +2,13 @@ import io
 
 from PIL import Image
 
-from .fixtures import (
-    client,
-    event_mocks,
-    news_mocks,
-    visitor_mocks,
-)
+from .fixtures import client, event_mock, news_mock, visitor_mock
 
 __all__ = [
     "client",
-    "event_mocks",
-    "news_mocks",
-    "visitor_mocks",
+    "event_mock",
+    "news_mock",
+    "visitor_mock",
 ]
 
 

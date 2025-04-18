@@ -26,7 +26,14 @@ jobs:
         - 
           name: Check repo
           uses: actions/checkout@v4
-
+        -
+          name: Run lint
+          run:
+            ruff check .
+        -
+          name: Run tests
+          run:
+            pytest tests/ -v
         - 
           name: Create .env file
           run: |

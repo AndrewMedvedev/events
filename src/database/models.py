@@ -5,12 +5,21 @@ from datetime import datetime
 from sqlalchemy import DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .base import Base, created_at, int_null_true, int_nullable, int_pk, str_null_true, str_nullable, str_uniq
+from .base import (
+    Base,
+    created_at,
+    int_null_true,
+    int_nullable,
+    int_pk,
+    str_null_true,
+    str_nullable,
+    str_uniq,
+)
 
 
 class NewsModel(Base):
     __tablename__ = "news"
-    __table_args__ = {"extend_existing": True}
+    __table_args__ = ({"extend_existing": True},)
 
     id: Mapped[int_pk]
     created_at: Mapped[created_at]
@@ -21,7 +30,7 @@ class NewsModel(Base):
 
 class EventModel(Base):
     __tablename__ = "event"
-    __table_args__ = {"extend_existing": True}
+    __table_args__ = ({"extend_existing": True},)
 
     id: Mapped[int_pk]
     name_event: Mapped[str_uniq]

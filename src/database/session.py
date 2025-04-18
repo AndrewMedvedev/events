@@ -3,7 +3,13 @@ from typing import Optional
 import contextlib
 from collections.abc import AsyncIterator
 
-from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import (
+    AsyncConnection,
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 
 from config import get_db_url
 
@@ -29,9 +35,9 @@ class DatabaseSessionService:
         async with self._sessionmaker() as session:
             try:
                 yield session
-            except Exception as _ex:
+            except Exception as exc:
                 await session.rollback()
-                raise _ex
+                raise exc
 
     @contextlib.asynccontextmanager
     async def connect(self) -> AsyncIterator[AsyncConnection]:
@@ -40,9 +46,9 @@ class DatabaseSessionService:
         async with self._engine.begin() as connection:
             try:
                 yield connection
-            except Exception as _ex:
+            except Exception as exc:
                 await connection.rollback()
-                raise _ex
+                raise exc
 
 
 db_session = DatabaseSessionService()
