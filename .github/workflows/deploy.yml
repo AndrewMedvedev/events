@@ -13,6 +13,11 @@ jobs:
       env:
         
         DB_VARS: >
+          DB_HOST=${{ secrets.DB_HOST }}
+          DB_PORT=${{ secrets.DB_PORT }}
+          DB_NAME=${{ secrets.DB_NAME }}
+          DB_USER=${{ secrets.DB_USER }}
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}
           POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
           POSTGRES_DB=${{ secrets.POSTGRES_DB }}
@@ -26,11 +31,6 @@ jobs:
         - 
           name: Check repo
           uses: actions/checkout@v4
-        - 
-          name: Create .env file
-          run: |
-            echo "$DB_VARS" >> .env
-            echo "$API_VARS" >> .env
         -
           name: Cache dependencies
           uses: actions/cache@v4
@@ -51,6 +51,11 @@ jobs:
           name: Run tests
           run:
             pytest tests/ -v
+        - 
+          name: Create .env file
+          run: |
+            echo "$DB_VARS" >> .env
+            echo "$API_VARS" >> .env
         - 
           name: Login in to Docker Hub
           uses: docker/login-action@v3
