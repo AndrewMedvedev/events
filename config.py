@@ -1,6 +1,13 @@
-from dotenv import dotenv_values, find_dotenv
+import os
+
+from dotenv import dotenv_values, find_dotenv, load_dotenv
 
 config = dotenv_values(find_dotenv())
+
+if os.getenv("GITHUB_ACTIONS") == "true":
+    load_dotenv(".env.test")
+else:
+    load_dotenv()
 
 DB_HOST: str = config["DB_HOST"]
 DB_PORT: int = config["DB_PORT"]
