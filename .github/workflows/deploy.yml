@@ -31,6 +31,11 @@ jobs:
         - 
           name: Check repo
           uses: actions/checkout@v4
+        - 
+          name: Create .env file
+          run: |
+            echo "$DB_VARS" >> .env
+            echo "$API_VARS" >> .env
         -
           name: Cache dependencies
           uses: actions/cache@v4
@@ -47,11 +52,6 @@ jobs:
           name: Run lint
           run:
             ruff check . --config=ruff.toml
-        - 
-          name: Create .env file
-          run: |
-            echo "$DB_VARS" >> .env
-            echo "$API_VARS" >> .env
         -
           name: Run tests
           run:
