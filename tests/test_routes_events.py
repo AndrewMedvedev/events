@@ -58,9 +58,7 @@ def test_add_event_bad(client, payload, code):
     ],
 )
 def test_get_events_ok(client, payload, code):
-    with patch(
-        "src.controllers.EventControl.get_event", new_callable=AsyncMock
-    ) as mock:
+    with patch("src.controllers.EventControl.get_event", new_callable=AsyncMock) as mock:
         test_data = TEST_GET_ALL_EVENTS
         if payload.is_paginated is True:
             test_data = TEST_GET_WITH_LIMIT_EVENTS
@@ -78,9 +76,7 @@ def test_get_events_ok(client, payload, code):
     [({"is_paginated": ""}, 422), ({"page": ""}, 422), ({"limit": ""}, 422)],
 )
 def test_get_events_bad(client, payload, code):
-    with patch(
-        "src.controllers.EventControl.get_event", new_callable=AsyncMock
-    ) as mock:
+    with patch("src.controllers.EventControl.get_event", new_callable=AsyncMock) as mock:
         mock.return_value = EventListResponse(
             events=[EventResponse(**event) for event in TEST_GET_ALL_EVENTS]
         )

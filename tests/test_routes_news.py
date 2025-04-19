@@ -66,9 +66,7 @@ def test_get_news_ok(client, payload, code):
         test_data = TEST_GET_ALL_NEWS
         if payload.is_paginated is True:
             test_data = TEST_GET_NEWS_WITH_LIMIT
-        mock.return_value = NewsListResponse(
-            news=[NewsResponse(**news) for news in test_data]
-        )
+        mock.return_value = NewsListResponse(news=[NewsResponse(**news) for news in test_data])
 
         response = client.get(url=f"{PATH_NEWS}get", params=payload.to_dict())
 

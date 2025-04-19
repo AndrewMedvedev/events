@@ -32,9 +32,7 @@ def valid_image(path: str) -> bool:
 class Images:
     @staticmethod
     async def add_images(image: UploadFile) -> str:
-        file_name = os.path.join(
-            FOLDER, f"{uuid.uuid4()}{os.path.splitext(image.filename)[1]}"
-        )
+        file_name = os.path.join(FOLDER, f"{uuid.uuid4()}{os.path.splitext(image.filename)[1]}")
         contents = await image.read()
         img = Image.open(io.BytesIO(contents))
         img.save(file_name, format="JPEG", optimize=True, quality=90)

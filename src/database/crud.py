@@ -33,9 +33,7 @@ class SQLEvent(DatabaseSessionService):
             events = await session.execute(select(EventModel))
         return EventListResponse(events=events.scalars().all())
 
-    async def read_events_with_limit(
-        self, page: int = 1, limit: int = 5
-    ) -> EventListResponse:
+    async def read_events_with_limit(self, page: int = 1, limit: int = 5) -> EventListResponse:
         offset = (page - 1) * limit
         async with self.session() as session:
             stmt = select(EventModel).offset(offset).limit(limit)
@@ -74,9 +72,7 @@ class SQLNews(DatabaseSessionService):
             news = await session.execute(select(NewsModel))
         return NewsListResponse(news=news.scalars().all())
 
-    async def read_news_with_limit(
-        self, page: int = 1, limit: int = 5
-    ) -> NewsListResponse:
+    async def read_news_with_limit(self, page: int = 1, limit: int = 5) -> NewsListResponse:
         offset = (page - 1) * limit
         async with self.session() as session:
             stmt = select(NewsModel).offset(offset).limit(limit)
@@ -85,9 +81,7 @@ class SQLNews(DatabaseSessionService):
 
     async def delete_news(self, news_id: int) -> None:
         async with self.session() as session:
-            obj = await session.execute(
-                select(NewsModel).filter(NewsModel.id == news_id)
-            )
+            obj = await session.execute(select(NewsModel).filter(NewsModel.id == news_id))
             if not obj:
                 raise BadRequestHTTPError
             data = obj.scalar()
@@ -107,9 +101,7 @@ class SQLVisitor(DatabaseSessionService):
         try:
             async with self.session() as session:
                 counts = await session.scalar(
-                    select(EventModel.limit_people).where(
-                        EventModel.id == model.event_id
-                    )
+                    select(EventModel.limit_people).where(EventModel.id == model.event_id)
                 )
                 counts_visitors = await session.execute(
                     select(func.count())
@@ -144,8 +136,7 @@ class SQLVisitor(DatabaseSessionService):
         async with self.session() as session:
             obj = await session.execute(
                 select(VisitorModel).filter(
-                    VisitorModel.event_id == event_id
-                    and VisitorModel.user_id == user_id
+                    VisitorModel.event_id == event_id and VisitorModel.user_id == user_id
                 )
             )
 
