@@ -7,11 +7,6 @@ config = dotenv_values(env_path)
 
 
 class Settings:
-    DB_HOST: str = config["DB_HOST"]
-    DB_PORT: int = config["DB_PORT"]
-    DB_NAME: str = config["DB_NAME"]
-    DB_USER: str = config["DB_USER"]
-    DB_PASSWORD: str = config["DB_PASSWORD"]
 
     GET_DATA: str = config["GET_DATA"]
 
@@ -23,4 +18,4 @@ class Settings:
 
 
 def get_db_url() -> str:
-    return f"postgresql+asyncpg://{Settings.DB_USER}:{Settings.DB_PASSWORD}@{Settings.DB_HOST}:{Settings.DB_PORT}/{Settings.DB_NAME}"
+    return f"postgresql+asyncpg://{Settings.POSTGRES_USER}:{Settings.POSTGRES_PASSWORD}@{Settings.POSTGRES_HOST}:{Settings.POSTGRES_PORT}/{Settings.POSTGRES_DB}"
