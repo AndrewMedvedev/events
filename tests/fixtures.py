@@ -3,6 +3,7 @@ from unittest.mock import AsyncMock, patch
 from fastapi.testclient import TestClient
 from pytest import fixture
 
+from config import Settings
 from main import app
 from src.schemas import EventListResponse, NewsListResponse, UserEventSchema
 
@@ -43,3 +44,8 @@ def visitor_mock():
             return_value=UserEventSchema(user_event=[])
         )
         yield instance
+
+
+@fixture(scope="session", autouse=True)
+def init_config():
+    return Settings
