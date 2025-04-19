@@ -189,3 +189,13 @@ TEST_GET_NEWS_WITH_LIMIT = [
         "created_at": "2025-04-17T18:49:58.050080",
     },
 ]
+
+
+TEST_GET_VISITOR_EVENTS = [
+    {"event_id": 1, "unique_string": "skjnvjks djvk hjsBDHVBsujhduvs"},
+    {"event_id": 2, "unique_string": "skjnvjks djvk dafbdfbdfb"},
+    {"event_id": 3, "unique_string": "skjnvjks djvk hjsBDHVBsujhduvs"},
+    {"event_id": 4, "unique_string": "bdbdfb djvk hjsBDHVBsujhduvs"},
+    {"event_id": 5, "unique_string": "skjnvjks bdfbdfbdab hjsBDHVBsujhduvs"},
+    {"event_id": 6, "unique_string": "skjnvjks djvk dfbdfbdfb"},
+]
