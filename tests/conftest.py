@@ -19,7 +19,7 @@ def mock_config(monkeypatch):
     mock_settings = MagicMock()
     mock_settings.POSTGRES_HOST = "localhost"
     mock_settings.POSTGRES_PORT = "5432"
-    mock_settings.POSTGRES_PASSWORD = "12345"
+    mock_settings.POSTGRES_PASSWORD = 12345
     mock_settings.POSTGRES_USER = "user"
     mock_settings.POSTGRES_DB = "user_db"
     monkeypatch.setattr("config.Settings", mock_settings)
