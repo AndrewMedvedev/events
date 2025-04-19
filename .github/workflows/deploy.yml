@@ -29,13 +29,13 @@ jobs:
 
       steps:
         - 
-          name: Check repo
-          uses: actions/checkout@v4
-        - 
           name: Create .env file
           run: |
             echo "$DB_VARS" >> .env
             echo "$API_VARS" >> .env
+        - 
+          name: Check repo
+          uses: actions/checkout@v4
         -
           name: Cache dependencies
           uses: actions/cache@v4
