@@ -1,21 +1,14 @@
 from unittest.mock import AsyncMock, patch
 
-from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from pytest import fixture
 
-from src.routers import events, news, visitors
+from main import app
 from src.schemas import EventListResponse, NewsListResponse, UserEventSchema
 
 
 @fixture
 def client():
-    app = FastAPI()
-
-    app.include_router(events)
-    app.include_router(news)
-    app.include_router(visitors)
-
     return TestClient(app)
 
 
