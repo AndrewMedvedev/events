@@ -32,7 +32,7 @@ from .requests import EventGetParams, EventListResponse, EventResponse, EventSch
         ),
     ],
 )
-def test_add_event_ok(client, payload, code):
+def test_route_add_event_ok(client, payload, code):
     with patch("src.controllers.EventControl.create_event", new_callable=AsyncMock):
         response = client.post(url=f"{PATH_EVENT}add", json=payload.to_dict())
 
@@ -43,7 +43,7 @@ def test_add_event_ok(client, payload, code):
     ("payload", "code"),
     [([], 422), ({}, 422), (None, 422)],
 )
-def test_add_event_bad(client, payload, code):
+def test_route_add_event_bad(client, payload, code):
     with patch("src.controllers.EventControl.create_event", new_callable=AsyncMock):
         response = client.post(url=f"{PATH_EVENT}add", json=payload)
 
@@ -57,7 +57,7 @@ def test_add_event_bad(client, payload, code):
         (EventGetParams(is_paginated=True, page=1, limit=10), 200),
     ],
 )
-def test_get_events_ok(client, payload, code):
+def test_route_get_events_ok(client, payload, code):
     with patch("src.controllers.EventControl.get_event", new_callable=AsyncMock) as mock:
         test_data = TEST_GET_ALL_EVENTS
         if payload.is_paginated is True:
@@ -75,12 +75,37 @@ def test_get_events_ok(client, payload, code):
     ("payload", "code"),
     [({"is_paginated": ""}, 422), ({"page": ""}, 422), ({"limit": ""}, 422)],
 )
-def test_get_events_bad(client, payload, code):
+def test_route_get_events_bad(client, payload, code):
     with patch("src.controllers.EventControl.get_event", new_callable=AsyncMock) as mock:
         mock.return_value = EventListResponse(
             events=[EventResponse(**event) for event in TEST_GET_ALL_EVENTS]
         )
 
         response = client.get(url=f"{PATH_EVENT}get", params=payload)
+
+        assert response.status_code == code
+
+
+@mark.parametrize(
+    ("event_id", "code"),
+    [
+        (1, 204),
+        (2, 204),
+    ],
+)
+def test_route_delete_events_ok(client, event_id, code):
+    with patch("src.controllers.EventControl.delete_event", new_callable=AsyncMock):
+        response = client.delete(url=f"{PATH_EVENT}delete/{event_id}")
+
+        assert response.status_code == code
+
+
+@mark.parametrize(
+    ("event_id", "code"),
+    [([], 422), ({}, 422), (None, 422)],
+)
+def test_route_delete_events_bad(client, event_id, code):
+    with patch("src.controllers.EventControl.delete_event", new_callable=AsyncMock):
+        response = client.delete(url=f"{PATH_EVENT}delete/{event_id}")
 
         assert response.status_code == code

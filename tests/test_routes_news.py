@@ -34,7 +34,7 @@ from .requests import NewsAddTest, NewsGetParams, NewsListResponse, NewsResponse
         ),
     ],
 )
-def test_add_news_ok(client, payload, code):
+def test_route_add_news_ok(client, payload, code):
     with patch("src.controllers.NewsControl.create_news", new_callable=AsyncMock):
         response = client.post(url=f"{PATH_NEWS}add", **payload.to_dict())
 
@@ -45,11 +45,11 @@ def test_add_news_ok(client, payload, code):
     ("payload", "code"),
     [([], 422), ({}, 422), (None, 422)],
 )
-def test_add_news_bad(client, payload, code):
+def test_route_add_news_bad(client, payload, code):
     with patch("src.controllers.NewsControl.create_news") as mock:
         mock_instance = mock.return_value
         mock_instance.create_news = AsyncMock()
-        response = client.post(url=f"{PATH_NEWS}add", data=payload)
+        response = client.post(url=f"{PATH_NEWS}add", json=payload)
 
         assert response.status_code == code
 
@@ -61,7 +61,7 @@ def test_add_news_bad(client, payload, code):
         (NewsGetParams(is_paginated=True, page=1, limit=10), 200),
     ],
 )
-def test_get_news_ok(client, payload, code):
+def test_route_get_news_ok(client, payload, code):
     with patch("src.controllers.NewsControl.get_news", new_callable=AsyncMock) as mock:
         test_data = TEST_GET_ALL_NEWS
         if payload.is_paginated is True:
@@ -77,12 +77,28 @@ def test_get_news_ok(client, payload, code):
     ("payload", "code"),
     [({"is_paginated": ""}, 422), ({"page": ""}, 422), ({"limit": ""}, 422)],
 )
-def test_get_news_bad(client, payload, code):
+def test_route_get_news_bad(client, payload, code):
     with patch("src.controllers.NewsControl.get_news", new_callable=AsyncMock) as mock:
         mock.return_value = NewsListResponse(
             news=[NewsResponse(**news) for news in TEST_GET_ALL_NEWS]
         )
 
         response = client.get(url=f"{PATH_NEWS}get", params=payload)
+
+        assert response.status_code == code
+
+
+@mark.parametrize(("news_id", "code"), [(1, 204), (11, 204)])
+def test_route_delete_news_ok(client, news_id, code):
+    with patch("src.controllers.NewsControl.delete_news", new_callable=AsyncMock):
+        response = client.delete(url=f"{PATH_NEWS}delete/{news_id}")
+
+        assert response.status_code == code
+
+
+@mark.parametrize(("news_id", "code"), [([], 422), ({}, 422), (None, 422)])
+def test_route_delete_news_bad(client, news_id, code):
+    with patch("src.controllers.NewsControl.delete_news", new_callable=AsyncMock):
+        response = client.delete(url=f"{PATH_NEWS}delete/{news_id}")
 
         assert response.status_code == code

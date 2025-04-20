@@ -32,7 +32,7 @@ def news_mock():
 
 @fixture
 def visitor_mock():
-    with patch("src.controllers.VisitorControl") as mock:
+    with patch("src.controllers.VisitorsControl") as mock:
         instance = mock.return_value
         instance.sql_visitor = AsyncMock()
         instance.get_user_events = AsyncMock(return_value=UserEventSchema(user_event=[]))

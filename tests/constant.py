@@ -199,3 +199,13 @@ TEST_GET_VISITOR_EVENTS = [
     {"event_id": 5, "unique_string": "skjnvjks bdfbdfbdab hjsBDHVBsujhduvs"},
     {"event_id": 6, "unique_string": "skjnvjks djvk dfbdfbdfb"},
 ]
+
+LEN_GET_VISITOR_EVENTS = 6
+
+
+TEST_VERIFY_VISITOR = {
+    "request": "req",
+    "first_name": "first",
+    "last_name": "last",
+    "email": "email",
+}
