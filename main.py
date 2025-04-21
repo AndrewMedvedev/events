@@ -13,7 +13,7 @@ from src.exeptions import (
 )
 from src.routers import events, news, visitors
 
-app = FastAPI(title="Admin Panel")
+app = FastAPI(title="Event service")
 
 
 @app.exception_handler(Exception)

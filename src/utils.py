@@ -43,6 +43,6 @@ class Images:
         if path != "absent":
             async with await anyio.open_file(path, "rb") as file:
                 img_bytes = file.read()
-                return base64.b64encode(img_bytes).decode("ascii")
+                return base64.b64encode(await img_bytes).decode("ascii")
         else:
             return "absent"

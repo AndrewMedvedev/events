@@ -9,10 +9,10 @@ class VisitorsControl:
         self.sql_visitor = SQLVisitor()
 
     async def create_user(self, user_id: int, event_id: int) -> None:
-        if (data := await get_user_data(user_id)).get("body") is None:
+        if (data := await get_user_data(user_id)) is None:
             raise BadRequestHTTPError
 
-        result = VisitorSchema.create({"user_id": user_id, "event_id": event_id, **data["body"]})
+        result = VisitorSchema.create({"user_id": user_id, "event_id": event_id, **data})
         return await self.sql_visitor.create_visitors(result.to_model())
 
     async def get_user_events(self, user_id: int) -> UserEventSchema:

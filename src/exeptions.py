@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from fastapi.exceptions import HTTPException
 
-from .constants import MIN
+from .constants import MIN_STATUS_CODE
 
 __all__ = [
     "HTTPException",
@@ -13,7 +13,7 @@ __all__ = [
 
 class BaseHTTPError(Exception):
     def __init__(self, message: str, code: int) -> None:
-        self.code = code if code > MIN else 500
+        self.code = code if code > MIN_STATUS_CODE else 500
         self.message = message
 
     def __str__(self):

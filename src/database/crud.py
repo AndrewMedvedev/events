@@ -85,7 +85,7 @@ class SQLNews(DatabaseSessionService):
             if not obj:
                 raise BadRequestHTTPError
             data = obj.scalar()
-            img = await valid_image(data.image)
+            img = valid_image(data.image)
             if img:
                 os.remove(data.image)
             await session.delete(data)

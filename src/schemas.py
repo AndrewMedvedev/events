@@ -10,6 +10,7 @@ from .database.models import EventModel, NewsModel, VisitorModel
 
 class EventResponse(BaseModel):
     id: int
+    created_at: datetime
     name_event: str
     date_time: datetime
     location: str

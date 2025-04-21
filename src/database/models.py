@@ -33,6 +33,7 @@ class EventModel(Base):
     __table_args__ = ({"extend_existing": True},)
 
     id: Mapped[int_pk]
+    created_at: Mapped[created_at]
     name_event: Mapped[str_uniq]
     date_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     location: Mapped[str_nullable]
@@ -50,6 +51,7 @@ class VisitorModel(Base):
     __tablename__ = "visitor"
 
     id: Mapped[int_pk]
+    created_at: Mapped[created_at]
     user_id: Mapped[int_nullable]
     event_id: Mapped[int] = mapped_column(ForeignKey(EventModel.id))
     first_name: Mapped[str_nullable]
