@@ -2,6 +2,7 @@ import os
 
 from sqlalchemy import func, select
 from sqlalchemy.exc import DataError, IntegrityError
+from sqlalchemy.orm.exc import UnmappedInstanceError
 
 from ..exeptions import BadRequestHTTPError, ExistsHTTPError, NoPlacesHTTPError
 from ..schemas import EventListResponse, NewsListResponse
@@ -133,18 +134,21 @@ class SQLVisitor(DatabaseSessionService):
             )
 
     async def delete_visitors(self, user_id: int, event_id: int) -> None:
-        async with self.session() as session:
-            obj = await session.execute(
-                select(VisitorModel).filter(
-                    VisitorModel.event_id == event_id and VisitorModel.user_id == user_id
+        try:
+            async with self.session() as session:
+                obj = await session.execute(
+                    select(VisitorModel).filter(
+                        VisitorModel.event_id == event_id and VisitorModel.user_id == user_id
+                    )
                 )
-            )
 
-            if not obj:
-                raise BadRequestHTTPError
+                if not obj:
+                    raise BadRequestHTTPError
 
-            await session.delete(obj.scalar())
-            await session.commit()
+                await session.delete(obj.scalar())
+                await session.commit()
+        except UnmappedInstanceError:
+            raise BadRequestHTTPError from None
 
     async def verify_visitors(self, unique_string: str) -> VisitorModel:
         async with self.session() as session:
