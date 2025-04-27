@@ -9,8 +9,8 @@ from .requests import UserEventSchema, UserSchema
 @mark.parametrize(
     ("event_id", "user_id", "code"),
     [
-        (1, 1, 201),
-        (2, 2, 201),
+        (1, "4c295c15-1b0d-41ae-b36b-92c9ca423494", 201),
+        (2, "e83e8ac6-7609-45d0-ae56-c6fe8f03c4da", 201),
     ],
 )
 def test_route_add_visitor_ok(client, event_id, user_id, code):
@@ -34,8 +34,8 @@ def test_route_add_visitor_bad(client, payload, code):
 @mark.parametrize(
     ("user_id", "code"),
     [
-        (1, 200),
-        (2, 200),
+        ("4c295c15-1b0d-41ae-b36b-92c9ca423494", 200),
+        ("e83e8ac6-7609-45d0-ae56-c6fe8f03c4da", 200),
     ],
 )
 def test_route_get_visitor_ok(client, user_id, code):
@@ -65,8 +65,8 @@ def test_route_get_visitor_bad(client, user_id, code):
 @mark.parametrize(
     ("event_id", "user_id", "code"),
     [
-        (1, 1, 204),
-        (2, 2, 204),
+        (1, "4c295c15-1b0d-41ae-b36b-92c9ca423494", 204),
+        (2, "e83e8ac6-7609-45d0-ae56-c6fe8f03c4da", 204),
     ],
 )
 def test_route_delete_visitors_ok(client, event_id, user_id, code):

@@ -16,8 +16,8 @@ from .requests import UserEventSchema, UserSchema
 @mark.parametrize(
     ("event_id", "user_id"),
     [
-        (1, 1),
-        (2, 2),
+        (1, "4c295c15-1b0d-41ae-b36b-92c9ca423494"),
+        (2, "e83e8ac6-7609-45d0-ae56-c6fe8f03c4da"),
     ],
 )
 def test_control_create_user_ok(visitor_mock, event_id, user_id):
@@ -41,8 +41,8 @@ async def test_control_create_user_bad(visitor_mock, payload):
 @mark.parametrize(
     ("user_id"),
     [
-        (1,),
-        (2,),
+        ("4c295c15-1b0d-41ae-b36b-92c9ca423494",),
+        ("e83e8ac6-7609-45d0-ae56-c6fe8f03c4da",),
     ],
 )
 async def test_control_get_visitor_ok(visitor_mock, user_id):
@@ -68,8 +68,8 @@ async def test_control_get_visitor_bad(visitor_mock, user_id):
 @mark.parametrize(
     ("event_id", "user_id"),
     [
-        (1, 1),
-        (2, 2),
+        (1, "4c295c15-1b0d-41ae-b36b-92c9ca423494"),
+        (2, "e83e8ac6-7609-45d0-ae56-c6fe8f03c4da"),
     ],
 )
 def test_control_delete_visitors_ok(visitor_mock, event_id, user_id):
@@ -82,8 +82,8 @@ def test_control_delete_visitors_ok(visitor_mock, event_id, user_id):
 @mark.parametrize(
     ("event_id", "user_id"),
     [
-        (1, 1),
-        (2, 2),
+        (1, "4c295c15-1b0d-41ae-b36b-92c9ca423494"),
+        (2, "e83e8ac6-7609-45d0-ae56-c6fe8f03c4da"),
     ],
 )
 async def test_control_delete_visitors_bad(visitor_mock, event_id, user_id):
