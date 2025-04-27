@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import uuid
 from datetime import datetime
+from uuid import UUID, uuid4
 
 from pydantic import BaseModel, ConfigDict
 
@@ -98,7 +98,7 @@ class NewsSchema(BaseModel):
 
 
 class VisitorSchema(BaseModel):
-    user_id: int
+    user_id: UUID
     first_name: str
     last_name: str
     email: str
@@ -113,7 +113,7 @@ class VisitorSchema(BaseModel):
             last_name=visitor["last_name"],
             email=visitor["email"],
             event_id=visitor["event_id"],
-            unique_string=f"{uuid.uuid4()!s}{uuid.uuid4()!s}",
+            unique_string=f"{uuid4()!s}{uuid4()!s}",
         )
 
     def to_model(self) -> VisitorModel:

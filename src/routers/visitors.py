@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from fastapi import APIRouter, status
 from fastapi.requests import Request
 from fastapi.responses import HTMLResponse, JSONResponse, Response
@@ -10,7 +12,7 @@ visitors = APIRouter(prefix=f"{PATH_ENDPOINT}visitors", tags=["visitors"])
 
 
 @visitors.post("/add/{event_id}/{user_id}")
-async def add(event_id: int, user_id: int) -> Response:
+async def add(event_id: int, user_id: UUID) -> Response:
     await VisitorsControl().create_user(
         user_id=user_id,
         event_id=event_id,
@@ -19,13 +21,13 @@ async def add(event_id: int, user_id: int) -> Response:
 
 
 @visitors.get("/get/{user_id}")
-async def get(user_id: int) -> Response:
+async def get(user_id: UUID) -> Response:
     result = await VisitorsControl().get_user_events(user_id=user_id)
     return JSONResponse(status_code=status.HTTP_200_OK, content=result.to_dict())
 
 
 @visitors.delete("/delete/{event_id}/{user_id}")
-async def delete(event_id: int, user_id: int) -> Response:
+async def delete(event_id: int, user_id: UUID) -> Response:
     await VisitorsControl().delete_user(user_id=user_id, event_id=event_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 

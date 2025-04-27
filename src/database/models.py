@@ -9,11 +9,11 @@ from .base import (
     Base,
     created_at,
     int_null_true,
-    int_nullable,
     int_pk,
     str_null_true,
     str_nullable,
     str_uniq,
+    uuid_nullable,
 )
 
 
@@ -52,7 +52,7 @@ class VisitorModel(Base):
 
     id: Mapped[int_pk]
     created_at: Mapped[created_at]
-    user_id: Mapped[int_nullable]
+    user_id: Mapped[uuid_nullable]
     event_id: Mapped[int] = mapped_column(ForeignKey(EventModel.id))
     first_name: Mapped[str_nullable]
     last_name: Mapped[str_nullable]

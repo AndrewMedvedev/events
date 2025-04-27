@@ -1,3 +1,5 @@
+from uuid import UUID
+
 import aiohttp
 
 from config import Settings
@@ -5,7 +7,7 @@ from config import Settings
 from .utils import valid_answer
 
 
-async def get_user_data(user_id: int) -> dict:
+async def get_user_data(user_id: UUID) -> dict:
     async with (
         aiohttp.ClientSession() as session,
         session.get(url=f"{Settings.GET_DATA}{user_id}", ssl=False) as data,
