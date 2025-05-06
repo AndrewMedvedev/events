@@ -7,13 +7,13 @@ config = dotenv_values(env_path)
 
 
 class Settings:
-    GET_DATA: str = config.get("GET_DATA", "")
+    GET_DATA: str = config["GET_DATA"]
 
-    POSTGRES_HOST: str = config.get("POSTGRES_HOST", "localhost")
-    POSTGRES_PORT: str = config.get("POSTGRES_PORT", "5432")
-    POSTGRES_PASSWORD: str = config.get("POSTGRES_PASSWORD", "12345")
-    POSTGRES_USER: str = config.get("POSTGRES_USER", "user")
-    POSTGRES_DB: str = config.get("POSTGRES_DB", "user_db")
+    POSTGRES_HOST: str = config["POSTGRES_HOST"]
+    POSTGRES_PORT: str = config["POSTGRES_PORT"]
+    POSTGRES_PASSWORD: str = config["POSTGRES_PASSWORD"]
+    POSTGRES_USER: str = config["POSTGRES_USER"]
+    POSTGRES_DB: str = config["POSTGRES_DB"]
 
 
 def get_db_url() -> str:
