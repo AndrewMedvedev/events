@@ -4,7 +4,7 @@ services:
     image: postgres:latest
     container_name: postgres-events
     ports:
-      - "7070:5432"
+      - "5432:5432"
     restart: always
     env_file:
       - .postgres.env
@@ -14,24 +14,27 @@ services:
       - network_db
 
   events-service:
-    image: ...
-    container_name: events-service
-    env_file:
-      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "7007:7007"
+      - "8080:8080"
     depends_on:
       - postgres-events
-    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7007"]
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
     restart: always
     volumes:
       - images:/data
     networks:
-      - network_db                                                            
-volumes:                                                                    
+      - network_db            
+                                                      
+volumes:
   db-events:
+    name: db-events       
   images:
+    name: images           
 
 networks:
   network_db:
+    name: network_db       
     driver: bridge
