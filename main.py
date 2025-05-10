@@ -11,7 +11,7 @@ from src.exeptions import (
     InternalHTTPError,
     JSONError,
 )
-from src.routers import camera, events, news, visitors
+from src.routers import events, news, visitors
 
 app = FastAPI(title="Event service")
 
@@ -62,7 +62,6 @@ app.add_middleware(
 
 
 def include_routers(app: FastAPI):
-    app.include_router(camera)
     app.include_router(events)
     app.include_router(news)
     app.include_router(visitors)
