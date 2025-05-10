@@ -5,7 +5,7 @@ from uuid import UUID
 
 from sqlalchemy import func
 from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine
-from sqlalchemy.orm import DeclarativeBase, declared_attr, mapped_column
+from sqlalchemy.orm import DeclarativeBase, mapped_column
 
 from config import get_db_url
 
@@ -27,7 +27,3 @@ str_null_true = Annotated[str, mapped_column(nullable=True)]
 
 class Base(AsyncAttrs, DeclarativeBase):
     __abstract__ = True
-
-    @declared_attr.directive
-    def __tablename__(cls) -> str:
-        return f"{cls.__name__.lower()}"
