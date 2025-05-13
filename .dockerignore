@@ -1,5 +1,4 @@
 .test.env
-.env
 docker-compose.yml
 .gitignore
 */__pycache__/
