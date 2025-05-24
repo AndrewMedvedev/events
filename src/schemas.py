@@ -5,7 +5,7 @@ from uuid import UUID, uuid4
 
 from pydantic import BaseModel, ConfigDict
 
-from .database.models import EventModel, NewsModel, PointsModel, VisitorModel
+from .database.models import EventModel, NewsModel, VisitorModel
 
 
 class EventResponse(BaseModel):
@@ -16,7 +16,7 @@ class EventResponse(BaseModel):
     location: str
     description: str
     limit_people: int | None
-    points_for_the_event: int | None
+    points_for_the_event: float | None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -48,7 +48,7 @@ class EventSchema(BaseModel):
     date_time: datetime
     location: str
     description: str
-    points_for_the_event: int | None = None
+    points_for_the_event: float | None = None
     limit_people: int | None = None
 
     def to_model(self) -> EventModel:
@@ -148,11 +148,3 @@ class UserEventSchema(BaseModel):
 
     def to_dict(self) -> dict:
         return {"user_event": [u.to_dict() for u in self.user_event]}
-
-
-class PointsSchema(BaseModel):
-    user_id: UUID
-    points: float
-
-    def to_model(self) -> PointsModel:
-        return PointsModel(user_id=self.user_id, points=self.points)
