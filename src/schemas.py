@@ -5,7 +5,7 @@ from uuid import UUID, uuid4
 
 from pydantic import BaseModel, ConfigDict
 
-from .database.models import EventModel, NewsModel, VisitorModel
+from .database.models import EventModel, NewsModel, PointsModel, VisitorModel
 
 
 class EventResponse(BaseModel):
@@ -148,3 +148,11 @@ class UserEventSchema(BaseModel):
 
     def to_dict(self) -> dict:
         return {"user_event": [u.to_dict() for u in self.user_event]}
+
+
+class PointsSchema(BaseModel):
+    user_id: UUID
+    points: float
+
+    def to_model(self) -> PointsModel:
+        return PointsModel(user_id=self.user_id, points=self.points)
