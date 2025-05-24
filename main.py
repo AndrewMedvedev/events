@@ -49,6 +49,7 @@ origins: list[str] = [
     "https://frontend-project-production-6352.up.railway.app",
     "https://admin-panel11.onrender.com",
     "https://online-service-for-applicants.onrender.com",
+    "https://admin-panel2222.onrender.com",
 ]
 
 app.add_middleware(
