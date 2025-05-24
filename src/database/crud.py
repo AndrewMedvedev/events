@@ -1,13 +1,18 @@
+from typing import Optional
+
 import os
+from uuid import UUID
 
 from sqlalchemy import func, select
 from sqlalchemy.exc import DataError, IntegrityError
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import UnmappedInstanceError
 
 from ..exeptions import BadRequestHTTPError, ExistsHTTPError, NoPlacesHTTPError
 from ..schemas import EventListResponse, NewsListResponse
 from ..utils import valid_image
-from .models import EventModel, NewsModel, VisitorModel
+from .models import EventModel, NewsModel, PointsModel, VisitorModel
 from .session import DatabaseSessionService
 
 
@@ -121,7 +126,7 @@ class SQLVisitor(DatabaseSessionService):
         except IntegrityError:
             raise ExistsHTTPError from None
 
-    async def get_visitors_events(self, user_id: int) -> list:
+    async def get_visitors_events(self, user_id: UUID) -> list:
         async with self.session() as session:
             return (
                 (
@@ -133,7 +138,7 @@ class SQLVisitor(DatabaseSessionService):
                 .all()
             )
 
-    async def delete_visitors(self, user_id: int, event_id: int) -> None:
+    async def delete_visitors(self, user_id: UUID, event_id: int) -> None:
         try:
             async with self.session() as session:
                 obj = await session.execute(
@@ -150,9 +155,32 @@ class SQLVisitor(DatabaseSessionService):
         except UnmappedInstanceError:
             raise BadRequestHTTPError from None
 
-    async def verify_visitors(self, unique_string: str) -> VisitorModel:
+    async def verify_visitors(self, unique_string: str) -> Optional[VisitorModel]:
         async with self.session() as session:
             obj = await session.execute(
-                select(VisitorModel).where(VisitorModel.unique_string == unique_string)
+                select(VisitorModel)
+                .options(joinedload(VisitorModel.event))
+                .where(VisitorModel.unique_string == unique_string)
             )
-        return obj.scalar()
+            data_visitor = obj.scalar()
+            if data_visitor:
+                event_points = data_visitor.event.points_for_the_event
+                await self.visitor_check_in_points_table(
+                    session=session, user_id=data_visitor.user_id, event_points=event_points
+                )
+            else:
+                return None
+            await session.commit()
+            return data_visitor
+
+    @staticmethod
+    async def visitor_check_in_points_table(
+        session: AsyncSession, user_id: UUID, event_points: float
+    ) -> None:
+        points_visitor = (
+            await session.execute(select(PointsModel).where(PointsModel.user_id == user_id))
+        ).scalar()
+        if points_visitor is None:
+            session.add(PointsModel(user_id=user_id, points=event_points))
+        else:
+            points_visitor.points += event_points

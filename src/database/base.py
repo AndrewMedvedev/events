@@ -17,6 +17,7 @@ async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
 created_at = Annotated[datetime, mapped_column(server_default=func.now())]
 int_pk = Annotated[int, mapped_column(primary_key=True)]
+float_nullable = Annotated[float, mapped_column(nullable=False)]
 int_nullable = Annotated[int, mapped_column(nullable=False)]
 uuid_nullable = Annotated[UUID, mapped_column(nullable=False)]
 int_null_true = Annotated[int, mapped_column(nullable=True)]

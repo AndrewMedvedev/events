@@ -8,6 +8,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import (
     Base,
     created_at,
+    float_nullable,
     int_null_true,
     int_pk,
     str_null_true,
@@ -29,7 +30,7 @@ class NewsModel(Base):
 
 
 class EventModel(Base):
-    __tablename__ = "event"
+    __tablename__ = "events"
     __table_args__ = ({"extend_existing": True},)
 
     id: Mapped[int_pk]
@@ -39,7 +40,7 @@ class EventModel(Base):
     location: Mapped[str_nullable]
     description: Mapped[str_nullable]
     limit_people: Mapped[int_null_true]
-    points_for_the_event: Mapped[int_null_true]
+    points_for_the_event: Mapped[float_nullable]
     visitors: Mapped[list[VisitorModel]] = relationship(
         "VisitorModel",
         back_populates="event",
@@ -48,7 +49,7 @@ class EventModel(Base):
 
 
 class VisitorModel(Base):
-    __tablename__ = "visitor"
+    __tablename__ = "visitors"
 
     id: Mapped[int_pk]
     created_at: Mapped[created_at]
@@ -67,3 +68,11 @@ class VisitorModel(Base):
         UniqueConstraint("user_id", "event_id", "first_name", "last_name", "email"),
         {"extend_existing": True},
     )
+
+
+class PointsModel(Base):
+    __tablename__ = "points"
+
+    id: Mapped[int_pk]
+    user_id: Mapped[uuid_nullable]
+    points: Mapped[float_nullable]
