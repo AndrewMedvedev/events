@@ -21,7 +21,6 @@ class NewsControl:
     async def get_news(self, is_paginated: bool, page: int, limit: int) -> NewsListResponse:
         if not is_paginated:
             return await self.sql_news.read_news()
-
         result = await self.sql_news.read_news_with_limit(page=page, limit=limit)
         for n in result.news:
             if n.image is not None:
