@@ -5,7 +5,8 @@ from logging import Logger, getLogger
 class LoggerMixin:
     logger: Logger = getLogger()
 
-    def config_logging(logger: Logger):
+    @staticmethod
+    def config_logging(logger: Logger) -> Logger:
         if not logger.handlers:
             handler = logging.StreamHandler()
             formatter = logging.Formatter(
