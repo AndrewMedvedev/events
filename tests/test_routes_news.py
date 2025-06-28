@@ -1,42 +1,22 @@
-from io import BytesIO
 from unittest.mock import AsyncMock, patch
 
 from pytest import mark
 
-from .conftest import generate_test_image
 from .constant import (
     PATH_NEWS,
-    TEST_BODY_NEWS,
     TEST_GET_ALL_NEWS,
     TEST_GET_NEWS_WITH_LIMIT,
-    TEST_TITLE_NEWS,
 )
-from .requests import NewsAddTest, NewsGetParams, NewsListResponse, NewsResponse
+from .fixtures.requests import NewsGetParams, NewsListResponse, NewsResponse
 
 
 @mark.parametrize(
-    ("payload", "code"),
-    [
-        (
-            NewsAddTest(
-                title=TEST_TITLE_NEWS,
-                body=TEST_BODY_NEWS,
-                image=BytesIO(generate_test_image()).getvalue(),
-            ),
-            201,
-        ),
-        (
-            NewsAddTest(
-                title=TEST_TITLE_NEWS,
-                body=TEST_BODY_NEWS,
-            ),
-            201,
-        ),
-    ],
+    ("code"),
+    [201],
 )
-def test_route_add_news_ok(client, payload, code):
+def test_route_add_news_ok(client, add_news_fixture, code):
     with patch("src.controllers.NewsControl.create_news", new_callable=AsyncMock):
-        response = client.post(url=f"{PATH_NEWS}add", **payload.to_dict())
+        response = client.post(url=f"{PATH_NEWS}add", **add_news_fixture.to_dict())
 
         assert response.status_code == code
 

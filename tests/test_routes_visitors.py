@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock, patch
 from pytest import mark
 
 from .constant import PATH_VISITOR, TEST_GET_VISITOR_EVENTS
-from .requests import UserEventSchema, UserSchema
+from .fixtures.requests import UserEventSchema, UserSchema
 
 
 @mark.parametrize(

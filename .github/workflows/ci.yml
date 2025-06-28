@@ -7,7 +7,7 @@ on:
       branches: ["main"]
   
 jobs:
-  run_linters:
+  run_linters_and_tests:
     runs-on: ubuntu-latest
     steps:
       - 
@@ -16,6 +16,9 @@ jobs:
       -
         name: Build Docker
         run: docker build -t linters -f Dockerfile . 
+      -
+        name: Run tests
+        run: docker run --rm -v $PWD:/app linters_and_tests pytest --cov
       - 
         name: Run mypy
         run:
@@ -26,7 +29,7 @@ jobs:
           docker run --rm -v $PWD:/app linters ruff check .
 
   push_image:
-    needs: run_linters
+    needs: run_linters_and_tests
     runs-on: ubuntu-latest
     steps:
       - 

@@ -124,8 +124,6 @@ LEN_GET_WITH_LIMIT_EVENTS = 4
 LEN_GET_ALL_NEWS = 5
 LEN_GET_WITH_LIMIT_NEWS = 3
 
-TEST_TITLE_NEWS = "Test News Title"
-TEST_BODY_NEWS = "This is a test news body"
 
 TEST_GET_ALL_NEWS = [
     {

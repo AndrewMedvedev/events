@@ -1,43 +1,20 @@
-from io import BytesIO
-
 from pytest import mark, raises
 
 from src.exeptions import BadRequestHTTPError
 from src.schemas import NewsListResponse, NewsResponse
-from tests.conftest import generate_test_image
-from tests.requests import NewsAddTest, NewsGetParams
 
 from .constant import (
     LEN_GET_ALL_NEWS,
     LEN_GET_WITH_LIMIT_NEWS,
-    TEST_BODY_NEWS,
     TEST_GET_ALL_NEWS,
     TEST_GET_NEWS_WITH_LIMIT,
-    TEST_TITLE_NEWS,
 )
+from .fixtures.requests import NewsGetParams
 
 
-@mark.parametrize(
-    ("payload"),
-    [
-        (
-            NewsAddTest(
-                title=TEST_TITLE_NEWS,
-                body=TEST_BODY_NEWS,
-                image=BytesIO(generate_test_image()).getvalue(),
-            ),
-        ),
-        (
-            NewsAddTest(
-                title=TEST_TITLE_NEWS,
-                body=TEST_BODY_NEWS,
-            ),
-        ),
-    ],
-)
-def test_control_create_news_ok(news_mock, payload):
+def test_control_create_news_ok(news_mock, add_news_fixture):
     news_mock.create_news.return_value = None
-    result = news_mock.create_news(payload)
+    result = news_mock.create_news(add_news_fixture)
     assert result is None
 
 

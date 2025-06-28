@@ -1,5 +1,3 @@
-from datetime import UTC, datetime
-
 from pytest import mark, raises
 
 from src.exeptions import BadRequestHTTPError
@@ -10,35 +8,12 @@ from .constant import (
     TEST_GET_ALL_EVENTS,
     TEST_GET_WITH_LIMIT_EVENTS,
 )
-from .requests import EventGetParams, EventListResponse, EventResponse, EventSchema
+from .fixtures.requests import EventGetParams, EventListResponse, EventResponse
 
 
-@mark.parametrize(
-    ("payload"),
-    [
-        (
-            EventSchema(
-                name_event="name",
-                date_time=datetime.now(tz=UTC),
-                location="street",
-                description="description",
-            ),
-        ),
-        (
-            EventSchema(
-                name_event="names",
-                date_time=(datetime.now(tz=UTC)),
-                location="streets",
-                description="descriptions",
-                points_for_the_event=11,
-                limit_people=411,
-            ),
-        ),
-    ],
-)
-def test_control_create_events_ok(event_mock, payload):
+def test_control_create_events_ok(event_mock, add_events_fixture):
     event_mock.create_event.return_value = None
-    result = event_mock.create_event(payload)
+    result = event_mock.create_event(add_events_fixture)
     assert result is None
 
 

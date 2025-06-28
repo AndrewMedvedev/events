@@ -1,40 +1,18 @@
-from datetime import UTC, datetime
 from unittest.mock import AsyncMock, patch
 
 from pytest import mark
 
 from .constant import PATH_EVENT, TEST_GET_ALL_EVENTS, TEST_GET_WITH_LIMIT_EVENTS
-from .requests import EventGetParams, EventListResponse, EventResponse, EventSchema
+from .fixtures.requests import EventGetParams, EventListResponse, EventResponse
 
 
 @mark.parametrize(
-    ("payload", "code"),
-    [
-        (
-            EventSchema(
-                name_event="name",
-                date_time=datetime.now(tz=UTC),
-                location="street",
-                description="description",
-            ),
-            201,
-        ),
-        (
-            EventSchema(
-                name_event="names",
-                date_time=(datetime.now(tz=UTC)),
-                location="streets",
-                description="descriptions",
-                points_for_the_event=11,
-                limit_people=411,
-            ),
-            201,
-        ),
-    ],
+    ("code"),
+    [201],
 )
-def test_route_add_event_ok(client, payload, code):
+def test_route_add_event_ok(client, code, add_events_fixture):
     with patch("src.controllers.EventControl.create_event", new_callable=AsyncMock):
-        response = client.post(url=f"{PATH_EVENT}add", json=payload.to_dict())
+        response = client.post(url=f"{PATH_EVENT}add", json=add_events_fixture.to_dict())
 
         assert response.status_code == code
 

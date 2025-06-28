@@ -10,7 +10,7 @@ from tests.constant import (
     TEST_VERIFY_VISITOR,
 )
 
-from .requests import UserEventSchema, UserSchema
+from .fixtures.requests import UserEventSchema, UserSchema
 
 
 @mark.parametrize(
