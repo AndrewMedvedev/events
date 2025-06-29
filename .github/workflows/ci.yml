@@ -15,18 +15,18 @@ jobs:
         uses: actions/checkout@v4
       -
         name: Build Docker
-        run: docker build -t linters -f Dockerfile . 
+        run: docker build -t linters_and_tests -f Dockerfile . 
       -
         name: Run tests
         run: docker run --rm -v $PWD:/app linters_and_tests pytest --cov
       - 
         name: Run mypy
         run:
-          docker run --rm -v $PWD:/app linters mypy src/
+          docker run --rm -v $PWD:/app linters_and_tests mypy src/
       - 
         name: Run ruff
         run:
-          docker run --rm -v $PWD:/app linters ruff check .
+          docker run --rm -v $PWD:/app linters_and_tests ruff check .
 
   push_image:
     needs: run_linters_and_tests
