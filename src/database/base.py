@@ -3,28 +3,37 @@ from typing import Annotated
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import func
-from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine
-from sqlalchemy.orm import DeclarativeBase, mapped_column
+from sqlalchemy import DateTime, func
+from sqlalchemy.ext.asyncio import (
+    AsyncAttrs,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
-from config import get_db_url
-
-DATABASE_URL = get_db_url()
-
-
-engine = create_async_engine(DATABASE_URL)
-async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
-
-created_at = Annotated[datetime, mapped_column(server_default=func.now())]
-int_pk = Annotated[int, mapped_column(primary_key=True)]
-float_nullable = Annotated[float, mapped_column(nullable=False)]
-int_nullable = Annotated[int, mapped_column(nullable=False)]
-uuid_nullable = Annotated[UUID, mapped_column(nullable=False)]
-int_null_true = Annotated[int, mapped_column(nullable=True)]
-str_uniq = Annotated[str, mapped_column(unique=True, nullable=False)]
-str_nullable = Annotated[str, mapped_column(nullable=False)]
-str_null_true = Annotated[str, mapped_column(nullable=True)]
+StrNotNull = Annotated[str, mapped_column(nullable=False)]
+StrNullable = Annotated[str | None, mapped_column(nullable=True)]
+IntPK = Annotated[int, mapped_column(primary_key=True)]
+FloatNotNull = Annotated[float | None, mapped_column(nullable=False)]
+UUIDNotNull = Annotated[UUID, mapped_column(nullable=False)]
+IntNull = Annotated[int | None, mapped_column(nullable=True)]
+StrUniq = Annotated[str, mapped_column(unique=True, nullable=False)]
 
 
 class Base(AsyncAttrs, DeclarativeBase):
     __abstract__ = True
+
+    id: Mapped[IntPK]
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
+
+
+def create_sessionmaker(sqlalchemy_url: str) -> async_sessionmaker[AsyncSession]:
+    engine = create_async_engine(url=sqlalchemy_url, echo=True)
+    return async_sessionmaker(engine, class_=AsyncSession, autoflush=False, expire_on_commit=False)

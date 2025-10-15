@@ -9,7 +9,7 @@ import anyio
 from fastapi import UploadFile
 from PIL import Image
 
-from .constants import FOLDER, STATUS_OK
+from .core.constants import FOLDER, STATUS_OK
 from .exeptions import NotFoundHTTPError
 
 
