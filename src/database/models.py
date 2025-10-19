@@ -8,7 +8,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import (
     Base,
     FloatNotNull,
-    IntNull,
+    IntNotNull,
     StrNotNull,
     StrNullable,
     StrUniq,
@@ -33,7 +33,7 @@ class EventModel(Base):
     date_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     location: Mapped[StrNotNull]
     description: Mapped[StrNotNull]
-    limit_people: Mapped[IntNull]
+    limit_people: Mapped[IntNotNull]
     points_for_the_event: Mapped[FloatNotNull]
     visitors: Mapped[list[VisitorModel]] = relationship(
         "VisitorModel",

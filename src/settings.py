@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import pytz
 from dotenv import load_dotenv
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -7,6 +8,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 BASE_DIR = Path(__file__).resolve().parent.parent
 # Секретные переменные
 ENV_PATH = BASE_DIR / ".env"
+TIMEZONE = "Europe/Moscow"
+moscow_tz = pytz.timezone(TIMEZONE)
 
 
 load_dotenv(ENV_PATH)
@@ -28,13 +31,8 @@ class PostgresSettings(BaseSettings):
         )
 
 
-class GetDataSettings(BaseSettings):
-    get_data: str = ""
-
-
 class Settings(BaseSettings):
     postgres: PostgresSettings = PostgresSettings()
-    get_data: GetDataSettings = GetDataSettings()
 
 
 settings = Settings()

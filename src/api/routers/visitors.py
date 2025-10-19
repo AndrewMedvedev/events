@@ -14,7 +14,7 @@ from ...services.visitors import VisitorService
 visitors = APIRouter(route_class=DishkaRoute, prefix="/visitors", tags=["visitors"])
 
 
-@visitors.post("/add/{event_id}/{user_id}", status_code=status.HTTP_201_CREATED)
+@visitors.post("/{event_id}/{user_id}", status_code=status.HTTP_201_CREATED)
 async def add(service: Depends[VisitorService], event_id: int, user_id: UUID) -> None:
     await service.create_user(
         user_id=user_id,
@@ -22,12 +22,12 @@ async def add(service: Depends[VisitorService], event_id: int, user_id: UUID) ->
     )
 
 
-@visitors.get("/get/{user_id}", status_code=status.HTTP_200_OK)
+@visitors.get("/{user_id}", status_code=status.HTTP_200_OK)
 async def get(service: Depends[VisitorService], user_id: UUID) -> Sequence[VisitorSchema]:
     return await service.get_user_events(user_id=user_id)
 
 
-@visitors.delete("/delete/{event_id}/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+@visitors.delete("/{event_id}/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete(service: Depends[VisitorService], event_id: int, user_id: UUID) -> None:
     await service.delete_user(user_id=user_id, event_id=event_id)
 

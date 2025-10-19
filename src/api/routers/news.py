@@ -10,22 +10,22 @@ from ...services.news import NewsService
 news = APIRouter(route_class=DishkaRoute, prefix="/news", tags=["news"])
 
 
-@news.post("/add/", status_code=status.HTTP_201_CREATED)
+@news.post("/", status_code=status.HTTP_201_CREATED)
 async def add(
     service: Depends[NewsService],
     title: str = Form(),
     body: str = Form(),
     image: UploadFile | None = File(default=None),
-) -> None:
+) -> NewsSchema:
     schema = NewsSchema(title=title, body=body)
-    await service.create_news(schema, image)
+    return await service.create_news(schema, image)
 
 
-@news.get("/get/", status_code=status.HTTP_200_OK)
+@news.get("/", status_code=status.HTTP_200_OK)
 async def get(service: Depends[NewsService], page: int = 1, limit: int = 10) -> list[NewsSchema]:
     return await service.get_news(page=page, limit=limit)
 
 
-@news.delete("/delete/{news_id}", status_code=status.HTTP_204_NO_CONTENT)
+@news.delete("/{news_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete(service: Depends[NewsService], news_id: int) -> None:
     await service.delete_news(news_id)

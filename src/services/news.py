@@ -1,8 +1,8 @@
 from fastapi import UploadFile
 
 from ..core.domain import NewsSchema
+from ..core.utils import Images
 from ..database.repository import NewsRepository
-from ..utils import Images
 
 
 class NewsService:

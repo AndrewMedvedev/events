@@ -19,7 +19,7 @@ from ..core.exceptions import (
     NoPlacesError,
     ReadingError,
 )
-from ..utils import valid_image
+from ..core.utils import valid_image
 from .base import Base
 from .models import EventModel, NewsModel, PointsModel, VisitorModel
 
@@ -36,7 +36,11 @@ class CRUDRepository[ModelT: Base, SchemaT: BaseModel]:
 
     async def create(self, schema: SchemaT) -> SchemaT:
         try:
-            stmt = insert(self.model).values(**schema.model_dump()).returning(self.model)
+            stmt = (
+                insert(self.model)
+                .values(**schema.model_dump(exclude={"id"}))
+                .returning(self.model)
+            )
             result = await self.session.execute(stmt)
             await self.session.commit()
             created_model = result.scalar_one()
@@ -86,9 +90,9 @@ class NewsRepository(CRUDRepository[NewsModel, NewsSchema]):
         if not obj:
             raise DeletionError
         data = obj.scalar()
-        img = valid_image(data.image)
+        img = valid_image(data.image)  # type: ignore  # noqa: PGH003
         if img:
-            os.remove(data.image)
+            os.remove(data.image)  # type: ignore  # noqa: PGH003
         await self.session.delete(data)
         await self.session.commit()
 
@@ -102,22 +106,27 @@ class VisitorRepository(CRUDRepository[VisitorModel, VisitorSchema]):
             counts = await self.session.scalar(
                 select(EventModel.limit_people).where(EventModel.id == schema.event_id)
             )
+
             counts_visitors = await self.session.execute(
                 select(func.count())
                 .select_from(VisitorModel)
                 .filter(VisitorModel.event_id == schema.event_id)
             )
 
-            if counts_visitors.scalar() < counts or counts == 0:
-                stmt = insert(self.model).values(**schema.model_dump()).returning(self.model)
+            if counts_visitors.scalar() < counts or counts == 0:  # type: ignore  # noqa: PGH003
+                stmt = (
+                    insert(self.model)
+                    .values(**schema.model_dump(exclude={"id"}))
+                    .returning(self.model)
+                )
                 await self.session.execute(stmt)
                 await self.session.commit()
             else:
                 raise NoPlacesError
-        except DataError:
-            raise MismatchError from None
-        except IntegrityError:
-            raise CreationError from None
+        except DataError as e:
+            raise MismatchError(f"Error while mismatch: {e}") from e
+        except IntegrityError as e:
+            raise CreationError(f"Error while creation: {e}") from e
 
     async def get_visitors_events(self, user_id: UUID) -> list[VisitorSchema]:
         result = (
@@ -155,7 +164,7 @@ class VisitorRepository(CRUDRepository[VisitorModel, VisitorSchema]):
         )
         data_visitor = obj.scalar()
         if data_visitor:
-            event_points = data_visitor.event.points_for_the_event
+            event_points = data_visitor.event.points_for_the_event  # type: ignore  # noqa: PGH003
             await self.visitor_check_in_points_table(
                 session=self.session, user_id=data_visitor.user_id, event_points=event_points
             )

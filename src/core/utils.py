@@ -4,13 +4,20 @@ import base64
 import io
 import os
 import uuid
+from datetime import datetime
 
 import anyio
 from fastapi import UploadFile
 from PIL import Image
 
-from .core.constants import FOLDER, STATUS_OK
-from .exeptions import NotFoundHTTPError
+from .constants import FOLDER, STATUS_OK
+from .exceptions import NotFoundHTTPError
+
+
+def current_datetime() -> datetime:
+    from ..settings import moscow_tz  # noqa: PLC0415
+
+    return datetime.now(tz=moscow_tz)
 
 
 async def valid_answer(response: Any) -> dict:

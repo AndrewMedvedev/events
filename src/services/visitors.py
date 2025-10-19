@@ -1,8 +1,8 @@
 from uuid import UUID
 
 from ..core.domain import VisitorSchema
+from ..core.exceptions import BadRequestHTTPError
 from ..database.repository import VisitorRepository
-from ..exeptions import BadRequestHTTPError
 from ..rest import get_user_data
 
 

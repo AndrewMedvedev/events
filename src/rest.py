@@ -1,14 +1,14 @@
 from uuid import UUID
 
-import aiohttp
-
-from .settings import settings
-from .utils import valid_answer
-
 
 async def get_user_data(user_id: UUID) -> dict:
-    async with (
-        aiohttp.ClientSession() as session,
-        session.get(url=f"{settings.get_data.get_data}{user_id}", ssl=False) as data,
-    ):
-        return await valid_answer(response=data)
+    return {
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "john.doe@example.com",
+    }
+
+
+""""
+user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+"""

@@ -7,28 +7,28 @@ services:
       - "5432:5432"
     restart: always
     env_file:
-      - .postgres.env
+      - .env
     volumes:
       - db-events:/var/lib/postgresql/data
     networks:
       - network_db
 
-  events-service:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
-    depends_on:
-      - postgres-events
-    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
-    restart: always
-    env_file:
-      - .test.env
-    volumes:
-      - images:/data
-    networks:
-      - network_db            
+  # events-service:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - postgres-events
+  #   command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+  #   restart: always
+  #   env_file:
+  #     - .test.env
+  #   volumes:
+  #     - images:/data
+  #   networks:
+  #     - network_db            
                                                       
 volumes:
   db-events:

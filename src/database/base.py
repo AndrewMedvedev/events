@@ -15,9 +15,9 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 StrNotNull = Annotated[str, mapped_column(nullable=False)]
 StrNullable = Annotated[str | None, mapped_column(nullable=True)]
 IntPK = Annotated[int, mapped_column(primary_key=True)]
-FloatNotNull = Annotated[float | None, mapped_column(nullable=False)]
+FloatNotNull = Annotated[float, mapped_column(nullable=False)]
 UUIDNotNull = Annotated[UUID, mapped_column(nullable=False)]
-IntNull = Annotated[int | None, mapped_column(nullable=True)]
+IntNotNull = Annotated[int, mapped_column(nullable=False)]
 StrUniq = Annotated[str, mapped_column(unique=True, nullable=False)]
 
 
@@ -28,9 +28,6 @@ class Base(AsyncAttrs, DeclarativeBase):
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
 
 
