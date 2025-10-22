@@ -8,23 +8,6 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from .utils import current_datetime
 
 
-class EventResponse(BaseModel):
-    id: int
-    created_at: datetime
-    name_event: str
-    date_time: datetime
-    location: str
-    description: str
-    limit_people: int | None
-    points_for_the_event: float | None
-
-    model_config = ConfigDict(from_attributes=True)
-
-    @field_validator("date_time")
-    def valid_datetime(cls, v):
-        return v.isoformat()
-
-
 class EventSchema(BaseModel):
     id: int | None = None
     name_event: str

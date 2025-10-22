@@ -8,7 +8,7 @@ from ...services.events import EventService
 events = APIRouter(route_class=DishkaRoute, prefix="/events", tags=["events"])
 
 
-@events.post("/", status_code=status.HTTP_201_CREATED)
+@events.post("/", status_code=status.HTTP_201_CREATED, response_model=EventSchema)
 async def add(schema: EventSchema, service: Depends[EventService]) -> EventSchema:
     return await service.create_event(schema)
 

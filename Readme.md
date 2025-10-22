@@ -1,447 +1,374 @@
 # Документация REST API
 
-
-## Сервис мероприятий 
-
+## Сервис мероприятий
 
 ## Базовый ендпоинт: '/events/'
 
+## Add
 
-## Add:
 Ресурс для создания мероприятий.
 
-> POST '/api/v1/events/add/'
+> POST '/api/v1/events/'
 
 Принимает:
 
-| Name | Type |
-|:-------------:|:-------:|
-| name_event | str |
-| date_time | datetime |
-| location | str |
-| description | str |
-| points_for_the_event | int or None |
-| limit_people | int or None |
+| Name | Type | Filling |
+|:-------------:|:-------------:|:-------------:|
+| id | int | автозаполняемый |
+| name_event | str | обязательное заполнение |
+| date_time | datetime | автозаполняемый |
+| location | str | обязательное заполнение |
+| description | str | обязательное заполнение |
+| points_for_the_event | int | не обязательное заполнение |
+| limit_people | int  | обязательное заполнение |
 
-## Примеры ответа:
-"При правильном заполненении приходит только статус код, при возникновении ошибки возвращается статус код и тело вида: {
-            "message": self.message,
-            "description": self.description,
-            "error": f"{type(self.error)} - {self.error}",
-        }"
+## Примеры ответа
 
-Положительные:
-  status_code: 201
+<b>Response</b>
 
-Отрицательные:
-  Неправильно заполнен json -> status_code: 422
-  Некоректные значения -> status_code: 400
-  Такие данные уже существуют -> status_code: 409
+- **201 Created**
 
+```json
+{
+  "title": "EventSchema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "ID события",
+      "nullable": true
+    },
+    "name_event": {
+      "type": "string",
+      "description": "Название события"
+    },
+    "date_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Дата и время события"
+    },
+    "location": {
+      "type": "string",
+      "description": "Местоположение"
+    },
+    "description": {
+      "type": "string",
+      "description": "Описание события"
+    },
+    "points_for_the_event": {
+      "type": "number",
+      "format": "float",
+      "default": 0,
+      "description": "Баллы за событие"
+    },
+    "limit_people": {
+      "type": "integer",
+      "default": 0,
+      "description": "Лимит участников"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Дата создания записи"
+    }
+  },
+}
+```
 
-## Get:
+## Get
+
 Ресурс для просмотра всех  мероприятий с возможностью получать данные по страницам.
 
-> GET '/api/v1/events/get/'
+> GET '/api/v1/events/'
 
 Принимает:
 
-| Name | Type |
-|:-------------:|:-------:|
-| is_paginated | bool |
-| page | int |
-| limit | int |
- 
-## Пример ответа:
-"Если флаг is_paginated == False то придут все мероприятия, is_paginated == True то придут по страницам, при возникновении ошибки возвращается статус код и тело вида: {
-            "message": self.message,
-            "description": self.description,
-            "error": f"{type(self.error)} - {self.error}",
-        }"
+| Name | Type | Filling |
+|:-------------:|:-------------:|:-------------:|
+| page | int | не обязательное заполнение |
+| limit | int | не обязательное заполнение |
 
-Положительные:
-  is_paginated: False
-  status_code: 200
-  body: 
-    "events: {[
-      {
-        "name_event": "dcsadcscsacd",
-        "id": 1,
-        "date_time": "2025-03-01T21:46:20.964000+00:00",
-        "limit_people": 0,
-        "location": "sacsdcsacs",
-        "description": "csacsdcsacs",
-        "points_for_the_event": 0
-      },
-      {
-        "name_event": "saefsc s sa fsfs",
-        "id": 2,
-        "date_time": "2025-03-01T21:46:20.964000+00:00",
-        "limit_people": 0,
-        "location": "sacsdcsacs",
-        "description": "csacsdcsacs",
-        "points_for_the_event": 0
-      },
-      {
-        "name_event": " vasd sav sakjndf klawsf",
-        "id": 3,
-        "date_time": "2025-03-01T21:46:20.964000+00:00",
-        "limit_people": 0,
-        "location": "sacsdcsacs",
-        "description": "csacsdcsacs",
-        "points_for_the_event": 0
-      },
-      {
-        "name_event": "упмукмвямк",
-        "id": 4,
-        "date_time": "2025-03-01T22:06:40.253000+00:00",
-        "limit_people": 0,
-        "location": "ыфвмфыфм",
-        "description": "фымфымыфк ыфкмыфв",
-        "points_for_the_event": 0
-      }
-    ]},"
+<b>Response</b>
 
-  is_paginated: True
-  page: 1
-  limit: 3
-  status_code: 200
-  body: 
-    'events: {[
-      {
-        "name_event": "dcsadcscsacd",
-        "id": 1,
-        "date_time": "2025-03-01T21:46:20.964000+00:00",
-        "limit_people": 0,
-        "location": "sacsdcsacs",
-        "description": "csacsdcsacs",
-        "points_for_the_event": 0
-      },
-      {
-        "name_event": "saefsc s sa fsfs",
-        "id": 2,
-        "date_time": "2025-03-01T21:46:20.964000+00:00",
-        "limit_people": 0,
-        "location": "sacsdcsacs",
-        "description": "csacsdcsacs",
-        "points_for_the_event": 0
-      },
-      {
-        "name_event": " vasd sav sakjndf klawsf",
-        "id": 3,
-        "date_time": "2025-03-01T21:46:20.964000+00:00",
-        "limit_people": 0,
-        "location": "sacsdcsacs",
-        "description": "csacsdcsacs",
-        "points_for_the_event": 0
-      }
-    ]}'
+- **200 OK**
 
-Отрицательные:
-  Неправильно заполнены поля -> status_code: 422
+```json
+list[{
+  "title": "EventSchema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "ID события",
+      "nullable": true
+    },
+    "name_event": {
+      "type": "string",
+      "description": "Название события"
+    },
+    "date_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Дата и время события"
+    },
+    "location": {
+      "type": "string",
+      "description": "Местоположение"
+    },
+    "description": {
+      "type": "string",
+      "description": "Описание события"
+    },
+    "points_for_the_event": {
+      "type": "number",
+      "format": "float",
+      "default": 0,
+      "description": "Баллы за событие"
+    },
+    "limit_people": {
+      "type": "integer",
+      "default": 0,
+      "description": "Лимит участников"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Дата создания записи"
+    }
+  },
+}]
+```
 
+## Delete
 
-## Delete:
 Ресурс для удаления мероприятий.
 
-> DELETE '/api/v1/events/delete/{event_id}'
+> DELETE '/api/v1/events/{event_id}'
 
 Принимает:
 
-| Name | Type |
-|:-------------:|:-------:|
-| event_id  | int |
+| Name | Type | Filling |
+|:-------------:|:-------------:|:-------------:|
+| event_id  | int | обязательное заполнение |
 
-## Примеры ответа:
-"При правильном заполненении приходит только статус код, при возникновении ошибки возвращается статус код и тело вида: {
-            "message": self.message,
-            "description": self.description,
-            "error": f"{type(self.error)} - {self.error}",
-        }"
+<b>Response</b>
 
-Положительные:
-  status_code: 204
+- **204 No content**
 
-Отрицательные:
-  Неправильно заполненно поле -> status_code: 422
-  Попытка удаления несуществующей записи -> status_code: 400
-
+```json
+{
+  "None"
+}
+```
 
 ## Базовый ендпоинт: '/news/'
 
+## Add
 
-## Add:
 Ресурс для создания новости.
 
-> POST '/api/v1/news/add/'
+> POST '/api/v1/news/'
 
 Принимает:
 
-| Name | Type |
-|:-------------:|:-------:|
-| title  | str |
-| body   | str |
-| image   | bytes | None |
+| Name | Type | Filling |
+|:-------------:|:-------------:|:-------------:|
+| title  | str | обязательное заполнение |
+| body   | str | обязательное заполнение |
+| image   | bytes | не обязательное заполнение |
 
-## Пример ответа:
-"При правильном заполненении приходит только статус код, при возникновении ошибки возвращается статус код и тело вида: {
-            "message": self.message,
-            "description": self.description,
-            "error": f"{type(self.error)} - {self.error}",
-        }"
+<b>Response</b>
 
-Положительные:
-  status_code: 201
+- **201 Created**
 
-Отрицательные:
-  Неправильно заполненные поля -> status_code: 422
-  Такие данные уже существуют -> status_code: 409
-  Некоректные значения -> status_code: 400
+```json
+{
+  "title": "NewsSchema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "ID новости",
+      "nullable": true
+    },
+    "title": {
+      "type": "string",
+      "description": "Заголовок новости"
+    },
+    "body": {
+      "type": "string",
+      "description": "Текст новости"
+    },
+    "image": {
+      "type": "string(base64)",
+      "description": "Изображение новости",
+      "nullable": true
+    }
+  },
+}
+```
 
+## Get
 
-## Get:
 Ресурс для просмотра всех новостей с возможностью получать данные по страницам.
 
-> GET "/api/v1/news/get/"
+> GET "/api/v1/news/"
 
 Принимает:
 
-| Name | Type |
-|:-------------:|:-------:|
-| is_paginated | bool |
-| page | int |
-| limit | int |
+| Name | Type | Filling |
+|:-------------:|:-------------:|:-------------:|
+| page | int | не обязательное заполнение |
+| limit | int | не обязательное заполнение |
 
-## Пример ответа:
-"Если флаг is_paginated == False то придут все новости без изображения, придет только путь по которому хранится изображение, is_paginated == True то придут по страницам, при возникновении ошибки возвращается статус код и тело вида: {
-            "message": self.message,
-            "description": self.description,
-            "error": f"{type(self.error)} - {self.error}",
-        }"
+<b>Response</b>
 
-Положительные:
-  is_paginated: False
-  page: 1
-  limit: 10
-  status_code: 200
-  body:
-      "{news: [
-    {
-        "id": 1,
-        "title": "adsbfdbdafb",
-        "body": "fbadfbadfbdafb",
-        "image": "images\\eda3b219-fbdc-4a02-bd41.jpg",
-        "created_at": "2025-04-17T18:49:58.050080",
-    },
-    {
-        "id": 2,
-        "title": "dafbdfb",
-        "body": "fbadfbadfbdafb",
-        "image": "images\\eda3b219-fbdc-524a9547f41.jpg",
-        "created_at": "2025-04-17T18:49:58.050080",
-    },
-    {
-        "id": 3,
-        "title": "dsfbdfab",
-        "body": "fbadfbadfbdafb",
-        "image": "images\\e-fbdc-4a02-bd77-c524a9547f41.jpg",
-        "created_at": "2025-04-17T18:49:58.050080",
-    },
-    {
-        "id": 4,
-        "title": "dfbgdfsbfd",
-        "body": "fbadfbadfbdafb",
-        "image": "images\\ed-fbdc-4a02-bd77-c524a9547f41.jpg",
-        "created_at": "2025-04-17T18:49:58.050080",
-    },
-    {
-        "id": 5,
-        "title": "adfbdf",
-        "body": "fbadfbadfbdafb",
-        "image": "images\\eda3b219-fbdc-4a-c524a9547f41.jpg",
-        "created_at": "2025-04-17T18:49:58.050080",
-    },
-    ] 
-      }"
+- **200 OK**
 
-  is_paginated: True
-  page: 1
-  limit: 3
-  status_code: 200
-  body:
-      "{news: [
-    {
-        "id": 1,
-        "title": "adsbfdbdafb",
-        "body": "fbadfbadfbdafb",
-        "image": "какое то изображение в виде строки base64",
-        "created_at": "2025-04-17T18:49:58.050080",
+```json
+list[{
+  "title": "NewsSchema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "ID новости",
+      "nullable": true
     },
-    {
-        "id": 2,
-        "title": "dafbdfb",
-        "body": "fbadfbadfbdafb",
-        "image": "какое то изображение в виде строки base64",
-        "created_at": "2025-04-17T18:49:58.050080",
+    "title": {
+      "type": "string",
+      "description": "Заголовок новости"
     },
-    {
-        "id": 3,
-        "title": "dsfbdfab",
-        "body": "fbadfbadfbdafb",
-        "image": "какое то изображение в виде строки base64",
-        "created_at": "2025-04-17T18:49:58.050080",
+    "body": {
+      "type": "string",
+      "description": "Текст новости"
+    },
+    "image": {
+      "type": "string(base64)",
+      "description": "Изображение новости",
+      "nullable": true
     }
-    ] 
-      }"
+  },
+}]
+```
 
-Отрицательные:
-  Неправильно заполненно поле -> status_code: 422
-  Некоректные значения -> status_code: 400
+## Delete
 
-
-## Delete:
 Ресурс для удаления мероприятий.
 
-> DELETE '/api/v1/news/delete/{news_id}'
+> DELETE '/api/v1/news/{news_id}'
 
 Принимает:
 
-| Name | Type |
-|:-------------:|:-------:|
-| news_id  | int |
+| Name | Type | Filling |
+|:-------------:|:-------------:|:-------------:|
+| news_id  | int | обязательное заполнение |
 
-## Примеры ответа:
-"При правильном заполненении приходит только статус код, при возникновении ошибки возвращается статус код и тело вида: {
-            "message": self.message,
-            "description": self.description,
-            "error": f"{type(self.error)} - {self.error}",
-        }"
+<b>Response</b>
 
-Положительные:
-  status_code: 204
+- **204 No content**
 
-Отрицательные:
-  Неправильно заполненно поле -> status_code: 422
-  Попытка удаления несуществующей записи -> status_code: 400
-
+```json
+{
+  "None"
+}
+```
 
 ## Базовый ендпоинт: '/visitors/'
 
+## Add
 
-## Add:
 Ресурс для регистрации пользователя на  мероприятия.
 
-> POST '/api/v1/visitors/add/{event_id}/{user_id}'
+> POST '/api/v1/visitors/{event_id}/{user_id}'
 
 Принимает:
 
-| Name | Type |
-|:-------------:|:-------:|
-| event_id  | int |
-| user_id   | int |
+| Name | Type | Filling |
+|:-------------:|:-------------:|:-------------:|
+| event_id | int | обязательное заполнение |
+| user_id | int | обязательное заполнение |
 
-## Пример ответа:
-"При правильном заполненении приходит только статус код, при возникновении ошибки возвращается статус код и тело вида: {
-            "message": self.message,
-            "description": self.description,
-            "error": f"{type(self.error)} - {self.error}",
-        }"
+<b>Response</b>
 
-Положительные:
-  status_code: 201
+- **201 Created**
 
-Отрицательные:
-  Неправильно заполненно поле -> status_code: 422
-  Такие данные уже существуют -> status_code: 409
-  Некоректные значения -> status_code: 400
-  Попытка зарегестрировать несуществующего пользователя: -> status_code: 400
-  Попытка зарегестрироваться на несуществующее мероприятие: -> status_code: 400
+```json
+{
+  "None"
+}
+```
 
+## Get
 
-## Get:
 Ресурс для просмотра мероприятий на которые зарегестрирован пользователь.
 
-> GET '/api/v1/visitors/get/{user_id}'
+> GET '/api/v1/visitors/{user_id}'
 
 Принимает:
 
-| Name | Type |
-|:-------------:|:-------:|
-| user_id   | int |
+| Name | Type | Filling |
+|:-------------:|:-------------:|:-------------:|
+| user_id | int | обязательное заполнение |
 
+<b>Response</b>
 
-## Пример ответа:
-"При правильном заполнении вернутся мероприятие и уникальная строка на которые зарегестрирован пользователь, при возникновении ошибки возвращается статус код и тело вида: {
-            "message": self.message,
-            "description": self.description,
-            "error": f"{type(self.error)} - {self.error}",
-        }"
+- **200 OK**
 
-Положительные:
-  status_code: 200
-  body: 
-    'user_event: {[
-      {
-        "event_id": 2,
-        "unique_string": "35039281-1eaa-4d75-9951-37c24be4b8ea7b4a9e01-47e9-43a3-b1cb-2cc3421b37f8"
-      }
-    ]}'
+```json
+list[{
+  "id": 1,
+  "user_id": "123e4567-e89b-12d3-a456-426614174000",
+  "first_name": "Иван",
+  "last_name": "Петров",
+  "email": "ivan.petrov@example.com",
+  "event_id": 5,
+  "unique_string": "550e8400-e29b-41d4-a716-446655440000550e8400-e29b-41d4-a716-446655440001",
+  "created_at": "2024-01-15T14:30:00Z"
+}]
+```
 
-Отрицательные:
-  Неправильно заполненно поле -> status_code: 422
-  Попытка получить мероприятия несуществующего пользователя: -> status_code: 400
+## Delete
 
-
-## Delete:
 Ресурс для удаления пользователя с мероприятий.
 
-> DELETE '/api/v1/visitors/delete/{event_id}/{user_id}'
+> DELETE '/api/v1/visitors/{event_id}/{user_id}'
 
 Принимает:
 
-| Name | Type |
-|:-------------:|:-------:|
-| event_id | int |
-| user_id  | int |
+| Name | Type | Filling |
+|:-------------:|:-------------:|:-------------:|
+| user_id | int | обязательное заполнение |
+| event_id | int | обязательное заполнение |
 
-## Примеры ответа:
-"При правильном заполненении приходит только статус код, при возникновении ошибки возвращается статус код и тело вида: {
-            "message": self.message,
-            "description": self.description,
-            "error": f"{type(self.error)} - {self.error}",
-        }"
+<b>Response</b>
 
-Положительные:
-  status_code: 204
+- **204 No content**
 
-Отрицательные:
-  Неправильно заполненно поле -> status_code: 422
-  Попытка удаления несуществующей записи -> status_code: 400
+```json
+{
+  "None"
+}
+```
 
+## Verify
 
-## Verify:
 Ресурс для проверки регистрации пользователя на мероприятии.
 
 > GET '/api/v1/visitors/verify/{unique_string}'
 
 Принимает:
 
-| Name | Type |
-|:-------------:|:-------:|
-| unique_string  | str |
+| Name | Type | Filling |
+|:-------------:|:-------------:|:-------------:|
+| unique_string  | str | обязательное заполнение |
 
-## Пример ответа:
-"При правильном заполненении приходит HTML страницы, при возникновении ошибки возвращается статус код и тело вида: {
-            "message": self.message,
-            "description": self.description,
-            "error": f"{type(self.error)} - {self.error}",
-        }"
+<b>Response</b>
 
-Положительные:
+- **200 OK**
 
-  status_code: 200
-  body:
-    '<!DOCTYPE html>
+```html
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -520,14 +447,15 @@
     </div>
 </div>
 </body>
-</html>'
+</html>
+```
 
-Отрицательные:
-  Неправильно заполненно поле(тип поля) -> status_code: 422
-  Неверная строка -> 
-  status_code: 200
-  body: 
-    "<!DOCTYPE html>
+<b>Response</b>
+
+- **200 OK**
+
+```html
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -565,8 +493,5 @@
         <h1>Не Зарегистрирован</h1>
     </div>
 </body>
-</html>"
-
-
-
-
+</html>
+```
