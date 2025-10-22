@@ -28,6 +28,7 @@ pytest-cov = "^6.2.1"
 dishka = "^1.7.2"
 greenlet = "^3.2.4"
 pytz = "^2025.2"
+pyqrcode = "^1.2.1"
 
 
 [build-system]

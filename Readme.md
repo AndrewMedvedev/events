@@ -495,3 +495,25 @@ list[{
 </body>
 </html>
 ```
+
+## Make QR
+
+Ресурс для создания qr кода.
+
+> GET '/api/v1/visitors/make/qr/{unique_string}'
+
+Принимает:
+
+| Name | Type | Filling |
+|:-------------:|:-------------:|:-------------:|
+| unique_string  | str | обязательное заполнение |
+
+<b>Response</b>
+
+- **200 OK**
+
+```json
+{
+  "Файл с qr кодом"
+}
+```

@@ -5,7 +5,7 @@ from dishka.integrations.fastapi import DishkaRoute
 from dishka.integrations.fastapi import FromDishka as Depends
 from fastapi import APIRouter, status
 from fastapi.requests import Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
 
 from ...core.domain import VisitorSchema
@@ -45,3 +45,8 @@ async def verify_visitor(
         return templates.TemplateResponse("register.html", {"request": request, **result})
 
     return templates.TemplateResponse("not_register.html", {"request": request})
+
+
+@visitors.get("/make/qr/{unique_string}")
+async def make_qr(unique_string: str, service: Depends[VisitorService]) -> StreamingResponse:
+    return await service.make_qr(unique_string=unique_string)

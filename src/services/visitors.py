@@ -1,4 +1,8 @@
+from io import BytesIO
 from uuid import UUID
+
+import pyqrcode
+from fastapi.responses import StreamingResponse
 
 from ..core.domain import VisitorSchema
 from ..core.exceptions import BadRequestHTTPError
@@ -35,3 +39,15 @@ class VisitorService:
             "last_name": verify_unique_string.last_name,
             "email": verify_unique_string.email,
         }
+
+    @staticmethod
+    async def make_qr(unique_string: str) -> StreamingResponse:
+        buffer = BytesIO()
+        qr = pyqrcode.create(unique_string)
+        qr.png(buffer, scale=6)
+        buffer.seek(0)
+        headers = {
+            "Content-Type": "image/png",
+            "Content-Disposition": 'attachment; filename="qr_code.png"',
+        }
+        return StreamingResponse(buffer, media_type="image/png", headers=headers)
