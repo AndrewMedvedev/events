@@ -28,6 +28,7 @@ def create_fastapi_app() -> FastAPI:
 
 def setup_middleware(app: FastAPI) -> None:
     origins: list[str] = [
+        "https://admin-panel-1-y4b1.onrender.com",
         "http://localhost:3000",
         "https://register-666-ramzer.onrender.com",
         "https://admin-panel-production-19ca.up.railway.app",
