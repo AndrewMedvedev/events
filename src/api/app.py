@@ -29,17 +29,12 @@ def create_fastapi_app() -> FastAPI:
 def setup_middleware(app: FastAPI) -> None:
     origins: list[str] = [
         "https://admin-panel-1-y4b1.onrender.com",
+        "https://frontend-project-1-isjz.onrender.com",
         "http://localhost:3000",
-        "https://register-666-ramzer.onrender.com",
-        "https://admin-panel-production-19ca.up.railway.app",
-        "https://frontend-project-production-6352.up.railway.app",
-        "https://admin-panel11.onrender.com",
-        "https://online-service-for-applicants.onrender.com",
-        "https://admin-panel2222.onrender.com",
     ]
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=origins,
+        allow_origins=["*"],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
