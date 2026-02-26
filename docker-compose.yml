@@ -1,5 +1,4 @@
 services:
-
   postgres-events:
     image: postgres:latest
     container_name: postgres-events
@@ -9,7 +8,7 @@ services:
     env_file:
       - .env
     volumes:
-      - db-events:/var/lib/postgresql/data
+      - db-events:/var/lib/postgresql
     networks:
       - network_db
 
@@ -28,15 +27,15 @@ services:
   #   volumes:
   #     - images:/data
   #   networks:
-  #     - network_db            
-                                                      
+  #     - network_db
+
 volumes:
   db-events:
-    name: db-events       
+    name: db-events
   images:
-    name: images           
+    name: images
 
 networks:
   network_db:
-    name: network_db       
+    name: network_db
     driver: bridge
