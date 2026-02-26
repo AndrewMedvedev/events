@@ -1,4 +1,5 @@
 import logging
+from contextlib import asynccontextmanager
 
 from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI, Request, status
@@ -18,8 +19,8 @@ from .routers import router
 logger = logging.getLogger(__name__)
 
 
-def create_fastapi_app() -> FastAPI:
-    app = FastAPI(title="Event service")
+def create_fastapi_app(lifespan: asynccontextmanager) -> FastAPI:  # type: ignore  # noqa: E261, PGH003, RUF100
+    app = FastAPI(title="Event service", lifespan=lifespan)
     setup_middleware(app)
     app.include_router(router)
     setup_dishka(container=container, app=app)
